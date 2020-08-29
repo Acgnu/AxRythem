@@ -114,6 +114,10 @@ function getKeyIndex(keyName, group){
 }
 
 $(function () {
+    document.oncontextmenu = function (e) {
+        e.preventDefault()
+        $('.key_highlight_fix').removeClass('key_highlight_fix')
+    }
     var lineGroup = $('.line_group')
     var isDiv = false
     var keyNameIndex = 0;
@@ -174,6 +178,12 @@ $(function () {
     }, function (e) {
         if(keyDom){
             $(keyDom).removeClass('key_highlight');
+        }
+    })
+
+    $('.line_triggler').click(function(e) {
+        if(keyDom){
+            $(keyDom).addClass('key_highlight_fix')
         }
     })
 
