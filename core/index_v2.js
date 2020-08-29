@@ -1,3 +1,6 @@
+var footageIndex = 1
+var activeKeyList = []
+var keyFootages = {}
 const groupInfo = [
     {index: 1, minKey: 1, maxKey: 3},
     {index: 2, minKey: 4, maxKey: 15},
@@ -113,10 +116,24 @@ function getKeyIndex(keyName, group){
     }
 }
 
+function deactiveAllKey(){
+    $('.key_highlight_fix').removeClass('key_highlight_fix')
+    activeKeyList = []
+}
+
 $(function () {
     document.oncontextmenu = function (e) {
         e.preventDefault()
-        $('.key_highlight_fix').removeClass('key_highlight_fix')
+        deactiveAllKey()
+        $('.footage_active').removeClass('footage_active')
+    }
+    document.body.onkeydown = function (e) {
+        if('ArrowLeft' == e.key){
+            $('.footage_active').prev().trigger('click')
+        }
+        if('ArrowRight' ==  e.key){
+            $('.footage_active').next().trigger('click')
+        }
     }
     var lineGroup = $('.line_group')
     var isDiv = false
@@ -175,6 +192,7 @@ $(function () {
         var groupDom = $('.key_group')[keyGroup.groupIndex - 1];
         keyDom = $(groupDom).children()[keyGroup.keyInGroupIndex];
         $(keyDom).addClass('key_highlight');
+        $('#key-name').text(lineName)
     }, function (e) {
         if(keyDom){
             $(keyDom).removeClass('key_highlight');
@@ -183,8 +201,61 @@ $(function () {
 
     $('.line_triggler').click(function(e) {
         if(keyDom){
+            if($(keyDom).hasClass('key_highlight_fix')) return
             $(keyDom).addClass('key_highlight_fix')
+            activeKeyList.push(keyDom)
+            console.log(activeKeyList)
         }
+    })
+
+    //片段创建事件
+    $('#button_create_footage').click(function(e){
+        if(activeKeyList.length == 0) return
+        $('#footage_list').children().removeClass('footage_active')
+        let dom = '<div class="footage_item footage_active" footage-index="' + footageIndex + '">'
+        dom += '<div class="footage_remove">-</div>'
+        dom += '<p>片段' + footageIndex + '</p>'
+        dom += '</div>'
+        $('#footage_list').append(dom)
+        let activeKeyCopy = []
+        for(let i = 0; i < activeKeyList.length; i++){
+            activeKeyCopy.push(activeKeyList[i])
+        }
+        keyFootages[footageIndex++] = activeKeyCopy
+
+    })
+
+    $("#footage_list").delegate(".footage_item","click",function(e){
+        //如果已选中, 则取消选中
+        deactiveAllKey()
+        let _me = $(this)
+        if(_me.hasClass('footage_active')){
+            _me.removeClass('footage_active')
+            return
+        }
+        _me.parent().children().removeClass('footage_active')
+        _me.addClass('footage_active')
+        let domList = keyFootages[e.target.getAttribute('footage-index')]
+        for(let i = 0; i < domList.length; i++){
+            $(domList[i]).addClass('key_highlight_fix');
+        }
+    });
+
+    $("#footage_list").delegate(".footage_remove","click",function(e){
+        e.stopPropagation()
+        let _me = $(this)
+        if(_me.parent().hasClass('footage_active')){
+            deactiveAllKey()
+        }
+        _me.parent().remove()
+        delete keyFootages[e.target.parentElement.getAttribute('footage-index')]
+    });
+
+    $('#button_footage_remove_all').click(function(e){
+        $('#footage_list').children().remove()
+        deactiveAllKey()
+        footageIndex = 1
+        keyFootages = {}
     })
 
     //绑定键盘悬停事件
