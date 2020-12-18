@@ -20,6 +20,7 @@
 **注: 因主要自己用, 仅Chrome能获取良好体验, 其他浏览器没有适配计划**
 
 预览:
+![preview.png](https://raw.githubusercontent.com/Acgnu/AxRythem/master/core/preview.jpg "preview")
 
 
 	
