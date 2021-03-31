@@ -22,7 +22,7 @@
 预览地址: https://acgnu.github.io/AxRythem/
 
 预览:
-![preview.png](https://raw.githubusercontent.com/Acgnu/AxRythem/master/core/preview.jpg "preview")
+![preview.png](https://raw.githubusercontent.com/Acgnu/AxRythem/master/preview.jpg "preview")
 
 
 	
