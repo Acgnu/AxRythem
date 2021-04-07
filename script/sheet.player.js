@@ -41,7 +41,6 @@ function playBySheet(sheet) {
  * @param keyNum (1-88)
  */
 function playByKey(keyNum){
-  console.log(keyNum)
   if(AUDIO_CACHE_MAP[keyNum]){
     AUDIO_CACHE_MAP[keyNum].currentTime = 0
     AUDIO_CACHE_MAP[keyNum].play()

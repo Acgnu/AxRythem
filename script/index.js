@@ -306,10 +306,23 @@ function getKeyDomByLineDom(lineDom) {
     let keyGroupIndex = lineDom.getAttribute('key-group-index')
     let keyGroupInfo = groupInfo[keyGroupIndex]
     let lineName = lineDom.getAttribute('line-name')
-    let keyIndex = getKeyIndex(lineName, keyGroupInfo);
-    let keyGroup = getKeyboardGroup(keyIndex);
-    let groupDom = $('.key_group')[keyGroup.groupIndex - 1];
+    let keyIndex = getKeyIndex(lineName, keyGroupInfo)
+    let keyGroup = getKeyboardGroup(keyIndex)
+    let groupDom = $('.key_group')[keyGroup.groupIndex - 1]
     return $(groupDom).children()[keyGroup.keyInGroupIndex]
+}
+
+function getLineDomByKeyDom(keyDom) {
+    let keyGroup = keyDom.parentElement.getAttribute('group-index') - 1
+    let lineDom = undefined
+    $('.line_triggler[key-group-index=' + keyGroup + ']').each(function(idx, val) {
+        let eachKeyDom = getKeyDomByLineDom(val)
+        if(eachKeyDom == keyDom) {
+            lineDom = val
+            return false
+        }
+    })
+    return lineDom
 }
 
 /**
@@ -330,8 +343,8 @@ function showTip(msg, tipLevel) {
     let divTipJQ = $('#div_tip')
     divTipJQ.text(msg)
     divTipJQ.css({background:tipLevel.bgColor, borderColor:tipLevel.bdColor, left:$(window).width() / 2 - divTipJQ.width() / 2})
-    let aniDiv = document.getElementById('div_tip');
-    aniDiv.classList.remove('div_tip_ani');
+    let aniDiv = document.getElementById('div_tip')
+    aniDiv.classList.remove('div_tip_ani')
     void aniDiv.offsetWidth;
-    aniDiv.classList.add('div_tip_ani');
+    aniDiv.classList.add('div_tip_ani')
 }
