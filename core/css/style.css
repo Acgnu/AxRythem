@@ -39,6 +39,13 @@ body{padding: 0; margin: 0; overflow: hidden; font-family: 'Microsoft YaHei UI'}
 .center_content section h4{font-size: 80px;margin-left: auto; padding-right: 50px;font-family: '华文隶书';}
 .center_content section:last-child{flex: 1.5; display: flex;align-items: center;}
 
+.train_option_div{position: absolute;width: 45px;right: -20px; opacity: 0;}
+.train_option_div_show_ani { animation: train_btn_show forwards .3s;}
+.train_option_div_hide_ani { animation: train_btn_hide .3s;}
+.train_op_button{padding: 10px 4px 10px 4px; font-size: 12px; }
+.train_op_button_top{border-top-left-radius: 5px;}
+.train_op_button_btm{border-top: none; border-bottom-right-radius: 5px;}
+
 .press_correct{position: absolute; opacity:0; pointer-events: none;}
 .press_correct_ani{animation: press_correct 3s;}
 .div_tip{color: white;padding: 8px 20px 8px 20px;border-width: 1px; border-style:  solid ;border-radius: 2px;box-shadow: 0 2px 7px 1px #0009;position: absolute;top: 12px;left: 100px; opacity: 0; pointer-events: none;}
@@ -54,4 +61,12 @@ body{padding: 0; margin: 0; overflow: hidden; font-family: 'Microsoft YaHei UI'}
   25%  {opacity: 1;transform: translateY(20px)}
   75%  {opacity: 1;transform: translateY(20px)}
   100% {opacity: 0;transform: translateY(0)}
+}
+@-webkit-keyframes train_btn_show {
+  from {opacity: 0;}
+  to {opacity: 1; right: 0;}
+}
+@-webkit-keyframes train_btn_hide {
+  from {opacity: 1; right: 0}
+  to {opacity: 0; right: -20px;}
 }

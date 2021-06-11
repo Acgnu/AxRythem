@@ -192,10 +192,8 @@ $(function () {
     let activeClass = 'diao_panel_active'
     for(let diao in keyDiao.diaoPkg){
         let diaoName = diao
-        // let diaoItem = keyDiao.diaoPkg[diao]
         let diaoDomHTML = '<li diao-name="' + diaoName + '" class="' + activeClass + '">'
-        diaoDomHTML += '<img src="imgs/diaohao/' + diaoName + '.png" />'
-        // diaoDomHTML += '<span>' + diaoItem.desc + '</span>'
+        diaoDomHTML += '<img src="imgs/diaohao/' + diaoName + '.png" title="' + keyDiao.diaoPkg[diao].desc + '"/>'
         diaoDomHTML += '</li>'
         diaoPanel.append(diaoDomHTML)
         activeClass = ''

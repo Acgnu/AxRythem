@@ -1,7 +1,14 @@
-var  ANIMATE_DOM_ID = 'press_correct_img'
-var  ANIMATE_CLASS_NAME = 'press_correct_ani'
-var TRAIN_LINE_HIGHLIGHT_CLASS_NAME = 'line_highlight'
-var TRAIN_BUTTON_ACTIVE_CLASS_NAME = 'start_train_button_active'
+const  ANIMATE_DOM_ID = 'press_correct_img'
+const TRAIN_CLASS_NAME = {
+  PRESS_CORRECT_ANI:'press_correct_ani',
+  LINE_HIGHLIGHT:'line_highlight',
+  START_TRAIN_BUTTON_ACTIVE:'start_train_button_active',
+  TRAIN_OP_BUTTON_ACTIVE:'train_op_button_active',
+  TRAIN_OPTION_DIV_SHOW_ANI:'train_option_div_show_ani',
+  TRAIN_OPTION_DIV_HIDE_ANI:'train_option_div_hide_ani',
+  TRAIN_OP_BUTTON_TOP:'train_op_button_top',
+}
+
 /**
  * 训练模式存储变量
  * @type {{
@@ -21,7 +28,7 @@ var trainEnv = {isTrain:false, randomAbleLine:[], currentLineDom:null, correctKe
 function playCorrectAnimation(offsetT, offsetL) {
   $('#' + ANIMATE_DOM_ID).css({top: offsetT, left: offsetL})
   var aniImg = document.getElementById(ANIMATE_DOM_ID);
-  aniImg.classList.remove(ANIMATE_CLASS_NAME);
+  aniImg.classList.remove(TRAIN_CLASS_NAME.PRESS_CORRECT_ANI);
   // -> triggering reflow /* The actual magic */
   // without this it wouldn't work. Try uncommenting the line and the transition won't be retriggered.
   // This was, from the original tutorial, will no work in strict mode. Thanks Felis Phasma! The next uncommented line is the fix.
@@ -29,7 +36,7 @@ function playCorrectAnimation(offsetT, offsetL) {
   //为了css3动画能够重新播放, 需要这行
   void aniImg.offsetWidth;
   // -> and re-adding the class
-  aniImg.classList.add(ANIMATE_CLASS_NAME);
+  aniImg.classList.add(TRAIN_CLASS_NAME.PRESS_CORRECT_ANI);
 }
 
 function onLineTriggerHoverIn(lineDom){
@@ -65,7 +72,7 @@ function onKeyClickWithTrain(keyDom, offsetT, offsetL) {
  */
 function reRandomTrainLine() {
   if(trainEnv.currentLineDom){
-    $(trainEnv.currentLineDom).removeClass(TRAIN_LINE_HIGHLIGHT_CLASS_NAME)
+    $(trainEnv.currentLineDom).removeClass(TRAIN_CLASS_NAME.LINE_HIGHLIGHT)
   }
   let minRandomIdx = 0
   let maxRandomIdx = trainEnv.randomAbleLine.length - 1
@@ -74,35 +81,75 @@ function reRandomTrainLine() {
   //获取此线/间对应的键位
   trainEnv.correctKeyDom = getKeyDomByLineDom(trainEnv.randomAbleLine[luckyLineIndex])
   //点亮线/间
-  $(trainEnv.currentLineDom).addClass(TRAIN_LINE_HIGHLIGHT_CLASS_NAME)
+  $(trainEnv.currentLineDom).addClass(TRAIN_CLASS_NAME.LINE_HIGHLIGHT)
+}
+
+/**
+ * 收集可随机的线/间
+ * @param trainRange 琴组范围 n-n (1, 7)
+ */
+function collectTrainLine(trainRange){
+  localStorage.setItem('trainRange', trainRange)
+  trainEnv.randomAbleLine.length = 0
+  // trainEnv.randomAbleLine.splice(0, trainEnv.randomAbleLine.length)
+  //获取指定范围的线/间
+  $('.line_group').children().each(function (idx, val) {
+    let groupIndex = parseInt(val.getAttribute('key-group-index'))
+    if (groupIndex > trainRange.split('-')[1] || groupIndex < trainRange.split('-')[0]) {
+      return
+    }
+    trainEnv.randomAbleLine.push(val)
+  })
 }
 
 $(function () {
   //开始训练按钮点击事件
   $('#button_start_train').click(function (e) {
     trainEnv.isTrain = !trainEnv.isTrain
+    let trainOpDiv = $('.train_option_div');
+    let trainOpBtn = $('.train_op_button');
     if(!trainEnv.isTrain){
       //停止训练
       if(trainEnv.currentLineDom){
-        $(trainEnv.currentLineDom).removeClass(TRAIN_LINE_HIGHLIGHT_CLASS_NAME)
+        $(trainEnv.currentLineDom).removeClass(TRAIN_CLASS_NAME.LINE_HIGHLIGHT)
       }
       trainEnv.currentLineDom = null
       trainEnv.correctKeyDom = null
       trainEnv.randomAbleLine = []
-      $(this).removeClass(TRAIN_BUTTON_ACTIVE_CLASS_NAME)
+      $(this).removeClass(TRAIN_CLASS_NAME.START_TRAIN_BUTTON_ACTIVE)
+      trainOpBtn.removeClass(TRAIN_CLASS_NAME.TRAIN_OP_BUTTON_ACTIVE)
+      trainOpDiv.removeClass(TRAIN_CLASS_NAME.TRAIN_OPTION_DIV_SHOW_ANI)
+      trainOpDiv.addClass(TRAIN_CLASS_NAME.TRAIN_OPTION_DIV_HIDE_ANI)
       return
     }
-    $(this).addClass(TRAIN_BUTTON_ACTIVE_CLASS_NAME)
-    let startGroupIndex = 2
-    let endGroupIndex = 5
-    //获取指定范围的线/间
-    $('.line_group').children().each(function (idx, val) {
-      let groupIndex = parseInt(val.getAttribute('key-group-index'))
-      if (groupIndex > endGroupIndex || groupIndex < startGroupIndex) {
-        return
-      }
-      trainEnv.randomAbleLine.push(val)
-    })
+    let trainRange = localStorage.getItem('trainRange');
+    if(!trainRange || trainRange == '2-5'){
+      trainRange = '2-5'
+      trainOpBtn[0].classList.add(TRAIN_CLASS_NAME.TRAIN_OP_BUTTON_ACTIVE)
+    } else {
+      trainOpBtn[1].classList.add(TRAIN_CLASS_NAME.TRAIN_OP_BUTTON_ACTIVE)
+    }
+    collectTrainLine(trainRange)
+    $(this).addClass(TRAIN_CLASS_NAME.START_TRAIN_BUTTON_ACTIVE)
+    trainOpDiv.addClass(TRAIN_CLASS_NAME.TRAIN_OPTION_DIV_SHOW_ANI)
+    trainOpDiv.removeClass(TRAIN_CLASS_NAME.TRAIN_OPTION_DIV_HIDE_ANI)
+    reRandomTrainLine()
+  })
+
+  //切换训练范围
+  $('.train_op_button').click(function (e) {
+    let me = $(this)
+    if(me.hasClass(TRAIN_CLASS_NAME.TRAIN_OP_BUTTON_ACTIVE)){
+      return;
+    }
+    me.parent().children().removeClass(TRAIN_CLASS_NAME.TRAIN_OP_BUTTON_ACTIVE)
+    me.addClass(TRAIN_CLASS_NAME.TRAIN_OP_BUTTON_ACTIVE)
+    if(me.hasClass(TRAIN_CLASS_NAME.TRAIN_OP_BUTTON_TOP)){
+      collectTrainLine('2-5')
+      reRandomTrainLine()
+      return
+    }
+    collectTrainLine('1-7')
     reRandomTrainLine()
   })
 })
