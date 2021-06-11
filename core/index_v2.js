@@ -1,8 +1,29 @@
+//页面片段下标, 自增作为节点ID
 var footageIndex = 1
+//每个片段需要按下的琴键节点
 var activeKeyList = []
+//所有片段集合
 var keyFootages = {}
+//音频缓存 key = 琴键号(1-88), value = 音频对象
 var audioCacheMap = {}
+/**
+ * 训练模式存储变量
+ * @type {{
+ * currentLineDom: null, 随机五线谱对应的线间节点
+ * correctKeyDom: null, 随机五线谱对应正确的琴键
+ * randomAbleLine: [], 可供随机点亮五线谱的范围
+ * isTrain: boolean  标识当前是否处于训练模式 true 是
+ * }}
+ */
 var trainEnv = {isTrain:false, randomAbleLine:[], currentLineDom:null, correctKeyDom:null}
+/**
+ * 琴键分组信息, 对应钢琴分组(大字一组二组, 小字组....)
+ * @type {({
+ * maxKey: number, 当前组最大琴键号
+ * minKey: number, 当前组最小琴键号
+ * index: number 当前组下标
+ * })[]}
+ */
 const groupInfo = [
     {index: 1, minKey: 1, maxKey: 3},
     {index: 2, minKey: 4, maxKey: 15},
@@ -15,8 +36,9 @@ const groupInfo = [
     {index: 9, minKey: 88, maxKey: 88},
 ];
 
+//调号信息
 const keyDiao = {
-    diaoHao: 'C',
+    diaoHao: 'C',       //当前使用的调号
     diaoPkg: {
         //C大调就是C D E F G A B C，符合十二平均律中大调的基本规律即全全半全全全半，C大调中既没有升调也没有降调。
         C: {desc:'C大调', blackKeys: [], offset: 0},
@@ -60,7 +82,12 @@ const keyDiao = {
     }
 };
 
-//根据键位总下标, 获取在其所属分组的下标
+/**
+ * 根据键位总下标, 获取在其所属分组的下标
+ * @param index  键盘号
+ * @param group 键盘号所在组
+ * @returns {number}
+ */
 function getKeyInGroupIndex(index, group) {
     var x = 0;
     for(var i = group.minKey; i <= group.maxKey; i++){
@@ -71,7 +98,11 @@ function getKeyInGroupIndex(index, group) {
     }
 }
 
-//根据键位总下标, 获取其所属分组以及其他关联信息
+/**
+ * 根据键位总下标, 获取其所属分组以及其他关联信息
+ * @param index  键盘号
+ * @returns {{maxKey: number, minKey: number, groupIndex: number, keyInGroupIndex: number, key: *}}
+ */
 function getKeyboardGroup(index){
     for(var i = 0; i < groupInfo.length; i++){
         var group = groupInfo[i]
@@ -87,7 +118,12 @@ function getKeyboardGroup(index){
     }
 }
 
-//根据键名以及其所属分组, 获取移调后的键位
+/**
+ * 根据键名以及其所属分组, 获取移调后的键位
+ * @param keyName 键位名(A, B, C...)
+ * @param group 键所在分组
+ * @returns {number}  键位偏移量
+ */
 function getKeyIndex(keyName, group){
     if('C' == keyName){
         return group.minKey + keyDiao.getKeyOffset(keyName)
@@ -118,11 +154,18 @@ function getKeyIndex(keyName, group){
     }
 }
 
+/**
+ * 取消所有键位选中状态
+ */
 function deactiveAllKey(){
     $('.key_highlight_fix').removeClass('key_highlight_fix')
     activeKeyList = []
 }
 
+/**
+ * 根据键位号播放对应的音频(音调)
+ * @param keyNum (1-88)
+ */
 function playByKey(keyNum){
     console.log(keyNum)
     if(audioCacheMap[keyNum]){
@@ -136,12 +179,15 @@ function playByKey(keyNum){
 }
 
 $(function () {
+    //禁用浏览器默认右键菜单
     document.oncontextmenu = function (e) {
         e.preventDefault()
         deactiveAllKey()
         $('.footage_active').removeClass('footage_active')
     }
+    //监听键盘按下事件
     document.body.onkeydown = function (e) {
+        //左键播放当前选中片段的左边一个片段
         if('ArrowLeft' == e.key){
             $('.footage_active').prev().trigger('click')
         }
@@ -149,11 +195,13 @@ $(function () {
             $('.footage_active').next().trigger('click')
         }
     }
+    //生成五线谱节点
     var lineGroup = $('.line_group')
     var isDiv = false
     var keyNameIndex = 0;
     var keyNames = ['C', 'D', 'E', 'F', 'G', 'A', 'B']
     var currentGroup = 9;
+    //0-53号键位(标准五线)以外用半透明线表示
     for(var i = 53; i > 0; i--){
         var dom;
         if(isDiv){
@@ -165,6 +213,7 @@ $(function () {
         }
         dom.className = "line_triggler"
         if(i == 25){
+            //中央C用虚线表示
             dom.style.borderStyle = 'dashed'
         }
         //根据调号定位到具体键
@@ -201,6 +250,7 @@ $(function () {
         keyDom = getKeyDomByLineDom(e.target)
         $(keyDom).addClass('key_highlight');
         if(!trainEnv.isTrain){
+            //训练模式下, 鼠标悬停到五线谱不显示音名
             $('#key-name').text( e.target.getAttribute('line-name'))
         }
     }, function (e) {
@@ -209,12 +259,12 @@ $(function () {
         }
     })
 
+    //绑定五线谱点击事件, 点亮对应键位
     $('.line_triggler').click(function(e) {
         if(keyDom){
             if($(keyDom).hasClass('key_highlight_fix')) return
             $(keyDom).addClass('key_highlight_fix')
             activeKeyList.push(keyDom)
-            console.log(activeKeyList)
         }
     })
 
@@ -232,9 +282,9 @@ $(function () {
             activeKeyCopy.push(activeKeyList[i])
         }
         keyFootages[footageIndex++] = activeKeyCopy
-
     })
 
+    //绑定片段点击事件
     $("#footage_list").delegate(".footage_item","click",function(e){
         //如果已选中, 则取消选中
         deactiveAllKey()
@@ -252,6 +302,7 @@ $(function () {
         }
     });
 
+    //绑定移除单个片段按钮点击事件
     $("#footage_list").delegate(".footage_remove","click",function(e){
         e.stopPropagation()
         let _me = $(this)
@@ -262,6 +313,7 @@ $(function () {
         delete keyFootages[e.target.parentElement.getAttribute('footage-index')]
     });
 
+    //绑定移除所有片段按钮点击事件
     $('#button_footage_remove_all').click(function(e){
         $('#footage_list').children().remove()
         deactiveAllKey()
@@ -269,6 +321,7 @@ $(function () {
         keyFootages = {}
     })
 
+    //绑定播放样本曲谱按钮
     $('#button_sample_play').click(function(e){
         if(sheet.isPlaying){
             clearInterval(sheet.playHandler)
@@ -323,6 +376,7 @@ $(function () {
         })
     })
 
+    //键位点击事件
     $('.key_white, .key_black').mousedown(function (e) {
         //获取分组
         let groupIndex = e.target.parentElement.getAttribute('group-index')
@@ -357,6 +411,7 @@ $(function () {
                 // without this it wouldn't work. Try uncommenting the line and the transition won't be retriggered.
                 // This was, from the original tutorial, will no work in strict mode. Thanks Felis Phasma! The next uncommented line is the fix.
                 // element.offsetWidth = element.offsetWidth;
+                //为了css3动画能够重新播放, 需要这行
                 void aniImg.offsetWidth;
                 // -> and re-adding the class
                 aniImg.classList.add("press_correct_ani");
@@ -364,9 +419,11 @@ $(function () {
         }
     })
 
+    //开始训练按钮点击事件
     $('#button_start_train').click(function (e) {
         trainEnv.isTrain = !trainEnv.isTrain
         if(!trainEnv.isTrain){
+            //停止训练
             if(trainEnv.currentLineDom){
                 $(trainEnv.currentLineDom).removeClass('line_highlight')
             }
@@ -391,6 +448,9 @@ $(function () {
     })
 })
 
+/**
+ * 重新生成随机五线谱选中线
+ */
 function reRandomTrainLine() {
     if(trainEnv.currentLineDom){
         $(trainEnv.currentLineDom).removeClass('line_highlight')
@@ -405,6 +465,11 @@ function reRandomTrainLine() {
     $(trainEnv.currentLineDom).addClass('line_highlight')
 }
 
+/**
+ * 根据五线谱DOM获取对应的键位DOM
+ * @param lineDom 五线谱DOM
+ * @returns {*}
+ */
 function getKeyDomByLineDom(lineDom) {
     let keyGroupIndex = lineDom.getAttribute('key-group-index')
     let keyGroupInfo = groupInfo[keyGroupIndex]
@@ -415,6 +480,10 @@ function getKeyDomByLineDom(lineDom) {
     return $(groupDom).children()[keyGroup.keyInGroupIndex]
 }
 
+/**
+ * 根据曲谱样本播放音频
+ * @param sheet
+ */
 function playBySheet(sheet) {
     let idx = 0
     let item = sheet.data[idx]
