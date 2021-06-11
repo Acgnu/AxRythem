@@ -271,7 +271,9 @@ $(function () {
 
     //主题切换图片点击
     $('.skin_img_button').click(function (e) {
-        changeTheme(e.target.getAttribute('skin'))
+        let curTheme = localStorage.getItem('theme')
+        changeTheme('css/skin.default.css' === curTheme ? 'css/skin.acg.css' : 'css/skin.default.css')
+        $(this).attr('src', 'css/skin.default.css' === curTheme ? 'imgs/default.png' : 'imgs/acg.png')
     })
 })
 

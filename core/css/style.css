@@ -15,7 +15,6 @@ body{padding: 0; margin: 0; overflow: hidden; font-family: 'Microsoft YaHei UI'}
 
 .skin_img_button{position: absolute;bottom: 0;height: 42px;width: 180px;opacity: 0.9;cursor: pointer;transition: .3s;}
 .skin_img_button:hover{transform: scale(1.05, 1.05); }
-.skin_img_default{bottom: 52px;}
 .skin_img_container{padding-left: 12px;height: 100%;width: 50%;position: relative}
 
 .footage_content section{width: 100%;padding:20px; display: flex; box-sizing: border-box;flex-wrap: wrap;}
