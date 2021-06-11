@@ -26,7 +26,7 @@ header{background: #1b1b1b;}
 .line_group hr:hover{border-color: red !important;}
 .line_group div{height: 13px; width: 100%;cursor: pointer;}
 .line_group div:hover{background: red;}
-.line_highlight{border-color: red; background: red;}
+.line_highlight{border-color: red !important; background: red;}
 
 .diao_panel{display: inline-flex; list-style: none; margin: 20px;padding: 0;}
 .diao_panel li{margin-right: 8px; border:1px solid transparent; cursor: pointer; background: white; border-top-left-radius: 5px; border-bottom-right-radius: 5px;}
@@ -51,7 +51,16 @@ header{background: #1b1b1b;}
 .center_content section:last-child{flex: 1.5; display: flex;align-items: center;}
 .create_button{width: 70px;height: 70px;border-style: solid;border-radius: 50%;border-color: #d20000;background: #1b1b1b;color: white;cursor: pointer; margin-left: 50px; outline: none;}
 .create_button:hover{background: #3e3e3e; transition: .3s}
-.clear_footage_button{background: black;outline: none;border: 2px solid #d20000;color: white;height: 33px;width: 158px;border-top-left-radius: 8px; cursor: pointer;}
-.sample_play_button{background: black;outline: none;border: 2px solid #d20000;color: white;height: 33px;width: 33px;border-bottom-right-radius: 8px; cursor: pointer; vertical-align: top;}
-.clear_footage_button:hover{background: #3e3e3e; transition: .3s}
-.sample_play_button:hover{background: #3e3e3e; transition: .3s}
+.footage_button_base{background: black;outline: none;border: 2px solid #d20000;color: white;height: 33px;}
+.clear_footage_button{width: 158px;border-top-left-radius: 8px; cursor: pointer;}
+.sample_play_button{width: 33px;border-bottom-right-radius: 8px; cursor: pointer; vertical-align: top;}
+.start_train_button{width: 33px; cursor: pointer; vertical-align: top;}
+.footage_button_hover:hover{background: #3e3e3e; transition: .3s}
+
+.press_correct{position: absolute; opacity:0;}
+.press_correct_ani{animation: press_correct 2s;}
+@-webkit-keyframes press_correct
+{
+  from {opacity: 1;}
+  to {opacity: 0; transform:translateY(-20px);}
+}

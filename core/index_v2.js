@@ -2,6 +2,7 @@ var footageIndex = 1
 var activeKeyList = []
 var keyFootages = {}
 var audioCacheMap = {}
+var trainEnv = {isTrain:false, randomAbleLine:[], currentLineDom:null, correctKeyDom:null}
 const groupInfo = [
     {index: 1, minKey: 1, maxKey: 3},
     {index: 2, minKey: 4, maxKey: 15},
@@ -197,15 +198,11 @@ $(function () {
     //绑定五线谱鼠标悬停事件
     var keyDom;
     $('.line_triggler').hover(function(e) {
-        var keyGroupIndex = e.target.getAttribute('key-group-index')
-        var keyGroup = groupInfo[keyGroupIndex]
-        var lineName = e.target.getAttribute('line-name')
-        var keyIndex = getKeyIndex(lineName, keyGroup);
-        var keyGroup = getKeyboardGroup(keyIndex);
-        var groupDom = $('.key_group')[keyGroup.groupIndex - 1];
-        keyDom = $(groupDom).children()[keyGroup.keyInGroupIndex];
+        keyDom = getKeyDomByLineDom(e.target)
         $(keyDom).addClass('key_highlight');
-        $('#key-name').text(lineName)
+        if(!trainEnv.isTrain){
+            $('#key-name').text( e.target.getAttribute('line-name'))
+        }
     }, function (e) {
         if(keyDom){
             $(keyDom).removeClass('key_highlight');
@@ -317,6 +314,11 @@ $(function () {
                 keyDiao.setDiaoHao(diaoName)
                 $(e.target.parentElement.parentElement).children().removeClass('diao_panel_active')
                 e.target.parentElement.className = 'diao_panel_active'
+                //如果处于训练模式, 重新随机
+                if(trainEnv.isTrain){
+                    $('#button_start_train').trigger('click')
+                    $('#button_start_train').trigger('click')
+                }
             }
         })
     })
@@ -340,8 +342,76 @@ $(function () {
         //获取升降前键
         //点亮线
         playByKey(keyNum)
-    });
-});
+
+        if(trainEnv.isTrain){
+            //训练模式
+            if(e.target == trainEnv.correctKeyDom){
+                $('#key-name').text(trainEnv.currentLineDom.getAttribute('line-name'))
+                //如果按对了, 消除上一个线/间, 重新开始生成随机线/间
+                reRandomTrainLine()
+                //显示动画
+                $('#press_correct_img').css({top:e.clientY - 80, left:e.clientX - 32})
+                var aniImg = document.getElementById("press_correct_img");
+                aniImg.classList.remove("press_correct_ani");
+                // -> triggering reflow /* The actual magic */
+                // without this it wouldn't work. Try uncommenting the line and the transition won't be retriggered.
+                // This was, from the original tutorial, will no work in strict mode. Thanks Felis Phasma! The next uncommented line is the fix.
+                // element.offsetWidth = element.offsetWidth;
+                void aniImg.offsetWidth;
+                // -> and re-adding the class
+                aniImg.classList.add("press_correct_ani");
+            }
+        }
+    })
+
+    $('#button_start_train').click(function (e) {
+        trainEnv.isTrain = !trainEnv.isTrain
+        if(!trainEnv.isTrain){
+            if(trainEnv.currentLineDom){
+                $(trainEnv.currentLineDom).removeClass('line_highlight')
+            }
+            trainEnv.currentLineDom = null
+            trainEnv.correctKeyDom = null
+            trainEnv.randomAbleLine = []
+            return
+        }
+        let startGroupIndex = 2
+        let endGroupIndex = 5
+        //获取指定范围的线/间
+        $('.line_group').children().each(function (idx, val) {
+            let groupIndex = parseInt(val.getAttribute('key-group-index'))
+            if (groupIndex > endGroupIndex || groupIndex < startGroupIndex) {
+                return
+            }
+            trainEnv.randomAbleLine.push(val)
+        })
+        reRandomTrainLine()
+    })
+})
+
+function reRandomTrainLine() {
+    if(trainEnv.currentLineDom){
+        $(trainEnv.currentLineDom).removeClass('line_highlight')
+    }
+    let minRandomIdx = 0
+    let maxRandomIdx = trainEnv.randomAbleLine.length - 1
+    let luckyLineIndex = Math.floor(Math.random() * (maxRandomIdx - minRandomIdx + 1)) + minRandomIdx
+    trainEnv.currentLineDom = trainEnv.randomAbleLine[luckyLineIndex]
+    //获取此线/间对应的键位
+    trainEnv.correctKeyDom = getKeyDomByLineDom(trainEnv.randomAbleLine[luckyLineIndex])
+    //点亮线/间
+    $(trainEnv.currentLineDom).addClass('line_highlight')
+}
+
+function getKeyDomByLineDom(lineDom) {
+    let keyGroupIndex = lineDom.getAttribute('key-group-index')
+    let keyGroupInfo = groupInfo[keyGroupIndex]
+    let lineName = lineDom.getAttribute('line-name')
+    let keyIndex = getKeyIndex(lineName, keyGroupInfo);
+    let keyGroup = getKeyboardGroup(keyIndex);
+    let groupDom = $('.key_group')[keyGroup.groupIndex - 1];
+    return $(groupDom).children()[keyGroup.keyInGroupIndex]
+}
 
 function playBySheet(sheet) {
     let idx = 0
