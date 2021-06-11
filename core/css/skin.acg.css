@@ -17,7 +17,7 @@ header{background: #1b1b1bab; text-align: center;}
 
 .footage_content {width: 100%; background: #1b1b1bab; position: absolute; top: 714px; bottom: 0;}
 .footage_content section div{background: url('../imgs/yinfu_acg.png');}
-.footage_button_border_div{float: left;width: 36px;height: 17px;border-top: 2px solid #d00000;transform: rotate(115deg) translate(-4px, -17px);}
+.footage_button_border_div{float: left;width: 36px;height: 17px;border-top: 2px solid #d00000;background: #3e3d3c;border-top: 2px solid #d00000;transform: rotate(-63deg) translate(-2px, 21px);}
 
 .func_button_base{background: #1b1b1bab; outline: none;border: 2px solid #d20000; color: white;cursor: pointer; border-radius: 50%}
 .create_button{width: 70px;height: 70px; margin-left: 50px; outline: none;}
