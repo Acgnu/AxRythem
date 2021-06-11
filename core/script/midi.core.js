@@ -47,4 +47,6 @@ function startLoggingMIDIInput( midiAccess, indexOfPort ) {
   midiAccess.inputs.forEach( function(entry) {entry.onmidimessage = onMIDIMessage;});
 }
 
-navigator.requestMIDIAccess().then( onMIDISuccess, onMIDIFailure );
+if(navigator.requestMIDIAccess){
+  navigator.requestMIDIAccess().then( onMIDISuccess, onMIDIFailure );
+}

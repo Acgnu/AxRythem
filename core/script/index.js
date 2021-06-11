@@ -52,7 +52,7 @@ const keyDiao = {
     },
     //根据输入的键(A, B, C), 根据调号判断需要升还是降
     getKeyOffset: function (key) {
-        var diaoInfo = this.diaoPkg[this.diaoHao]
+        let diaoInfo = this.diaoPkg[this.diaoHao]
         if (diaoInfo.blackKeys.indexOf(key) >= 0) {
             return diaoInfo.offset
         }
@@ -62,8 +62,13 @@ const keyDiao = {
     setDiaoHao: function (diaoHao) {
         this.diaoHao = diaoHao
     }
-};
+}
 
+const TIP_LEVEL = {
+    ERROR:{bgColor:'#e13030', bdColor:'#ffa9a9'},
+    NORMAL:{bgColor:'#8ec88b', bdColor:'#adffc2'},
+    WARNING:{bgColor:'#bcb65d', bdColor:'#fdff87'}
+}
 /**
  * 根据键位总下标, 获取在其所属分组的下标
  * @param index  键盘号
@@ -71,8 +76,8 @@ const keyDiao = {
  * @returns {number}
  */
 function getKeyInGroupIndex(index, group) {
-    var x = 0;
-    for(var i = group.minKey; i <= group.maxKey; i++){
+    let x = 0;
+    for(let i = group.minKey; i <= group.maxKey; i++){
         if(i == index){
             return x;
         }
@@ -86,8 +91,8 @@ function getKeyInGroupIndex(index, group) {
  * @returns {{maxKey: number, minKey: number, groupIndex: number, keyInGroupIndex: number, key: *}}
  */
 function getKeyboardGroup(index){
-    for(var i = 0; i < groupInfo.length; i++){
-        var group = groupInfo[i]
+    for(let i = 0; i < groupInfo.length; i++){
+        let group = groupInfo[i]
         if(index <= group.maxKey && index >= group.minKey){
             return {
                 key:index,
@@ -137,15 +142,23 @@ function getKeyIndex(keyName, group){
 }
 
 $(function () {
+    if(navigator.userAgent.indexOf('Chrome') < 0){
+        showTip('Use Chrome for the best experience', TIP_LEVEL.WARNING)
+    }
+
+    //恢复选择的主题
+    let choosedTheme = localStorage.getItem('theme')
+    changeTheme(choosedTheme ? choosedTheme : 'css/skin.default.css')
+
     //生成五线谱节点
-    var lineGroup = $('.line_group')
-    var isDiv = false
-    var keyNameIndex = 0;
-    var keyNames = ['C', 'D', 'E', 'F', 'G', 'A', 'B']
-    var currentGroup = 9;
+    let lineGroup = $('.line_group')
+    let isDiv = false
+    let keyNameIndex = 0;
+    let keyNames = ['C', 'D', 'E', 'F', 'G', 'A', 'B']
+    let currentGroup = 9;
     //0-53号键位(标准五线)以外用半透明线表示
-    for(var i = 53; i > 0; i--){
-        var dom;
+    for(let i = 53; i > 0; i--){
+        let dom;
         if(isDiv){
             dom= document.createElement("div");
             isDiv = false
@@ -159,7 +172,7 @@ $(function () {
             dom.style.borderStyle = 'dashed'
         }
         //根据调号定位到具体键
-        var lineName = keyNames[keyNameIndex--]
+        let lineName = keyNames[keyNameIndex--]
         dom.setAttribute('line-name', lineName)
         dom.setAttribute('key-group-index', currentGroup - 1)
         if(keyNameIndex < 0){
@@ -167,6 +180,7 @@ $(function () {
             currentGroup--;
         }
         if((i < 15 || i > 35) && isDiv){
+            // dom.style.borderColor = '#FFFFFF';
             dom.style.borderColor = '#b1b1b1';
         }
         lineGroup.append(dom)
@@ -255,6 +269,11 @@ $(function () {
         playByKey(keyNum)
         onKeyClickWithTrain(e.target, e.clientY - 80, e.clientX - 32)
     })
+
+    //主题切换图片点击
+    $('.skin_img_button').click(function (e) {
+        changeTheme(e.target.getAttribute('skin'))
+    })
 })
 
 /**
@@ -290,4 +309,28 @@ function getKeyDomByLineDom(lineDom) {
     let keyGroup = getKeyboardGroup(keyIndex);
     let groupDom = $('.key_group')[keyGroup.groupIndex - 1];
     return $(groupDom).children()[keyGroup.keyInGroupIndex]
+}
+
+/**
+ * 变更主题
+ * @param themePath 主题相对index的路径
+ */
+function changeTheme(themePath){
+    localStorage.setItem('theme', themePath)
+    document.getElementById('theme_css').href = themePath
+}
+
+/**
+ * 显示气泡消息
+ * @param msg
+ * @param tipLevel
+ */
+function showTip(msg, tipLevel) {
+    let divTipJQ = $('#div_tip')
+    divTipJQ.text(msg)
+    divTipJQ.css({background:tipLevel.bgColor, borderColor:tipLevel.bdColor, left:$(window).width() / 2 - divTipJQ.width() / 2})
+    let aniDiv = document.getElementById('div_tip');
+    aniDiv.classList.remove('div_tip_ani');
+    void aniDiv.offsetWidth;
+    aniDiv.classList.add('div_tip_ani');
 }

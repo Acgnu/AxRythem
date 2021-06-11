@@ -50,7 +50,7 @@ function playByKey(keyNum){
   let audio = new Audio('audio/key/' + keyNum + '.mp3')
   audio.play()
   if(audio.paused){
-    showTip('Audio can not play before you click anywhere of this page', 'error')
+    showTip('Audio can not play before you click anywhere of this page', TIP_LEVEL.ERROR)
   }else{
     AUDIO_CACHE_MAP[keyNum] = audio
   }

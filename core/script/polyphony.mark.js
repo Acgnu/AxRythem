@@ -1,8 +1,8 @@
-//页面片段下标, 自增作为节点ID
+//页面复音下标, 自增作为节点ID
 var footageIndex = 1
-//每个片段需要按下的琴键节点
+//每个复音需要按下的琴键节点
 var activeKeyList = []
-//所有片段集合
+//所有复音集合
 var keyFootages = {}
 
 $(function () {
@@ -14,7 +14,7 @@ $(function () {
   }
   //监听键盘按下事件
   document.body.onkeydown = function (e) {
-    //左键播放当前选中片段的左边一个片段
+    //左键播放当前选中复音的左边一个复音
     if('ArrowLeft' == e.key){
       $('.footage_active').prev().trigger('click')
     }
@@ -23,13 +23,13 @@ $(function () {
     }
   }
 
-  //片段创建事件
+  //复音创建事件
   $('#button_create_footage').click(function(e){
     if(activeKeyList.length == 0) return
     $('#footage_list').children().removeClass('footage_active')
     let dom = '<div class="footage_item footage_active" footage-index="' + footageIndex + '">'
     dom += '<div class="footage_remove">-</div>'
-    dom += '<p>片段' + footageIndex + '</p>'
+    dom += '<p>复音' + footageIndex + '</p>'
     dom += '</div>'
     $('#footage_list').append(dom)
     let activeKeyCopy = []
@@ -39,7 +39,7 @@ $(function () {
     keyFootages[footageIndex++] = activeKeyCopy
   })
 
-  //绑定片段点击事件
+  //绑定复音点击事件
   $("#footage_list").delegate(".footage_item","click",function(e){
     //如果已选中, 则取消选中
     deactiveAllKey()
@@ -59,7 +59,7 @@ $(function () {
     }
   });
 
-  //绑定移除单个片段按钮点击事件
+  //绑定移除单个复音按钮点击事件
   $("#footage_list").delegate(".footage_remove","click",function(e){
     e.stopPropagation()
     let _me = $(this)
@@ -70,7 +70,7 @@ $(function () {
     delete keyFootages[e.target.parentElement.getAttribute('footage-index')]
   });
 
-  //绑定移除所有片段按钮点击事件
+  //绑定移除所有复音按钮点击事件
   $('#button_footage_remove_all').click(function(e){
     $('#footage_list').children().remove()
     deactiveAllKey()

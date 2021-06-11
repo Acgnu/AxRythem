@@ -2,12 +2,19 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>AxRythem</title>
-    <link rel="stylesheet" type="text/css" href="style.css">
+    <meta name="keywords" content="在线钢琴,MIDI钢琴,MIDI,五线谱,网页钢琴,识谱" />
+    <meta name="description" content="支持MIDI键盘,虚拟MIDI设备的网页版本辅助识谱钢琴" />
+    <title>MIDI Piano</title>
+<!--    <link rel="stylesheet" type="text/css" href="css/skin.default.css">-->
+    <link href="favorite.ico" rel="shortcut icon" type="image/x-icon">
+    <link rel="stylesheet" type="text/css" href="" id="theme_css">
+    <link rel="stylesheet" type="text/css" href="css/style.css">
 </head>
 <body>
 <header>
+    <!-- 调号列表 -->
     <ul class="diao_panel"></ul>
+    <!-- MIDI设备名称显示框 -->
     <span id="midi_device_label" class="midi_label_span">No MIDI Input Device</span>
 </header>
 <article>
@@ -122,41 +129,47 @@
 </article>
 <article class="center_content">
     <section>
+        <div class="skin_img_container">
+            <img src="imgs/default.png" class="skin_img_button skin_img_default" skin="css/skin.default.css"/>
+            <img src="imgs/acg.png" class="skin_img_button" skin="css/skin.acg.css"/>
+        </div>
+        <!-- 音符名显示框 -->
         <h4 id="key-name"></h4>
     </section>
     <section class="line_content">
+        <!-- 五线谱列表 -->
         <div class="line_group"></div>
     </section>
     <section class="footage_manage">
-        <button class="func_button_base create_button" id="button_create_footage">创建片段</button>
+        <button class="func_button_base create_button" id="button_create_footage">创建复音</button>
     </section>
 </article>
 
 <div class="footage_content">
     <div class="footage_button_div">
         <div class="footage_button_border_div"></div>
-        <button class="footage_button_base clear_footage_button footage_button_hover" id="button_footage_remove_all">清空片段</button>
+        <button class="footage_button_base clear_footage_button footage_button_hover" id="button_footage_remove_all">清空复音</button>
         <button class="footage_button_base footage_small_button footage_button_hover" id="button_start_train">♞</button>
         <button class="footage_button_base footage_small_button footage_button_hover" id="button_sample_play">♫</button>
     </div>
-    <section id="footage_list">
-    </section>
+    <!--复音列表-->
+    <section id="footage_list"></section>
 </div>
 
 </div>
+<!--表情气泡-->
 <img src="imgs/emo.png" class="press_correct" id="press_correct_img"/>
-<div id="div_tip" class="div_tip">
-    哈哈哈哈
-</div>
+<!--提示气泡-->
+<div id="div_tip" class="div_tip"></div>
 </body>
+
 <script src="https://libs.baidu.com/jquery/2.0.0/jquery.min.js"></script>
 <!--<script src="sheets/canon.js"></script>-->
 <script src="sheets/kyobyobongko.js"></script>
-<script src="float.tip.js"></script>
-<script src="train.js"></script>
-<script src="sheet.player.js"></script>
-<script src="index.js"></script>
-<script src="polyphony.mark.js"></script>
-<script src="midi.core.js"></script>
-<script src="midi.web.bridge.js"></script>
+<script src="script/train.js"></script>
+<script src="script/sheet.player.js"></script>
+<script src="script/index.js"></script>
+<script src="script/polyphony.mark.js"></script>
+<script src="script/midi.core.js"></script>
+<script src="script/midi.web.bridge.js"></script>
 </html>
