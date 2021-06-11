@@ -1,0 +1,34 @@
+body{padding: 0; margin: 0;}
+header{background: #1b1b1b;}
+.key_pad{width: 100%;height: 120px;background: dimgray;display: inline-flex; border-top: 3px solid #d20000;}
+.key_group{width: 17.2075%;height: 100%;display: inline-flex;position: relative;}
+.key_group:first-child{width:3.7736%; }
+.key_group:last-child{width:1.8868%; }
+.key_group div{border: 1px solid black; border-top:none; border-left: none;flex-grow:1 ;}
+.key_group:last-child div:last-child{border-right: none;}
+.key_white{background: white;height: 100%;}
+.key_white:hover{background: red;}
+.key_black{ background: black;height: 70%;width: 9%;position: absolute;}
+.key_black:hover{ background: red;}
+.key_black_1{left: 9.5%;}
+.key_black_2{left: 24%;}
+.key_black_3{left: 52.2%;}
+.key_black_4{left: 66.6%;}
+.key_black_5{left: 81%;}
+.key_black_6{left: 29%;width: 36%;}
+.key_highlight{background: red;}
+
+.line_content{margin: 10px 0; width: 100%;}
+.line_content section{width: 400px; margin: 0 auto;}
+.line_group hr{margin:0px 0px; border: 2px solid #000000;cursor: pointer;}
+.line_group hr:hover{border-color: deepskyblue !important;}
+.line_group div{height: 13px; width: 100%;cursor: pointer;}
+.line_group div:hover{background: deepskyblue;}
+.line_highlight{border-color: deepskyblue; background: deepskyblue;}
+
+.diao_panel{display: inline-flex; list-style: none; margin: 8px;padding: 0;}
+.diao_panel li{margin-right: 8px; border:1px solid transparent; cursor: pointer; background: white; border-top-left-radius: 5px; border-bottom-right-radius: 5px;}
+.diao_panel li:hover{border:1px solid deepskyblue;}
+.diao_panel li img{display: block; height: 56px;}
+.diao_panel li span{display: block; text-align: center;}
+.diao_panel_active{background: deepskyblue !important; color: white;}
