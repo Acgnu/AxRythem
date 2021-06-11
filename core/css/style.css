@@ -1,9 +1,10 @@
 *{user-select:none;}
 body{padding: 0; margin: 0; overflow: hidden; font-family: 'Microsoft YaHei UI'}
-.key_group{width: 13.4771%;height: 100%;display: inline-flex;position: relative;}
+.key_group{width: 13.49%;height: 100%;display: inline-flex;position: relative;}
 .key_group:last-child div:last-child{border-right: none;}
-.key_group:first-child{width:3.7736%; }
-.key_group:last-child{width:1.8868%; }
+.key_group:first-child{width:3.80%; }
+/*.key_group:last-child{width:1.8868%; }*/
+.key_group:last-child{width:1.75%; }
 
 .key_black_1{left: 9.5%;}
 .key_black_2{left: 24%;}
@@ -26,10 +27,10 @@ body{padding: 0; margin: 0; overflow: hidden; font-family: 'Microsoft YaHei UI'}
 .footage_active{border-color: #d20000 !important; box-shadow: 0 0 10px 0px red;}
 .footage_button_div{position: absolute;top: -33px;right: 0;}
 
-.diao_panel{display: inline-flex;list-style: none;margin: 20px 0 4px 0;padding: 0;}
+.diao_panel{display: inline-flex;list-style: none;margin: 10px 0 4px 0;padding: 0;}
 .diao_panel li{margin-right: 8px; border:1px solid transparent; cursor: pointer; background: white; border-top-left-radius: 5px; border-bottom-right-radius: 5px;}
 .diao_panel li:hover{border:1px solid #d20000;}
-.diao_panel li img{display: block; height: 56px;}
+.diao_panel li img{display: block; height: 50px;}
 .diao_panel li span{display: block; text-align: center; font-size: 13px;}
 .diao_panel_active{background: #d20000 !important; color: white;box-shadow: 0 0 10px red;}
 .midi_label_span{display: inline-block;margin: 0 0 4px 0;color: #f4b422; width: 100%; font-family: '华文隶书';}

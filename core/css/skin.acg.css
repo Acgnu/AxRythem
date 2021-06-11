@@ -15,7 +15,7 @@ header{background: #1b1b1bab; text-align: center;}
 .line_group div:hover{background: rgba(255, 0, 0, 0.85);}
 .line_highlight{border-color: rgba(255, 0, 0, 0.85) !important; background: rgba(255, 0, 0, 0.85);}
 
-.footage_content {width: 100%; background: #1b1b1bab; position: absolute; top: 714px; bottom: 0;}
+.footage_content {width: 100%; background: #1b1b1bab; position: absolute; top: 697px; bottom: 0;}
 .footage_content section div{background: url('../imgs/yinfu_acg.png');}
 .footage_button_border_div{float: left;width: 36px;height: 17px;border-top: 2px solid #d00000;background: #3e3d3c;border-top: 2px solid #d00000;transform: rotate(-66deg) translate(-3px, 21px);}
 
