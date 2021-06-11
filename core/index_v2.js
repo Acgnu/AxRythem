@@ -237,6 +237,7 @@ $(function () {
         _me.addClass('footage_active')
         let domList = keyFootages[e.target.getAttribute('footage-index')]
         for(let i = 0; i < domList.length; i++){
+            activeKeyList.push(domList[i])
             $(domList[i]).addClass('key_highlight_fix');
         }
     });
