@@ -61,6 +61,7 @@ const keyDiao = {
     //变更当前调号
     setDiaoHao: function (diaoHao) {
         this.diaoHao = diaoHao
+        showTip(this.diaoPkg[diaoHao].desc, TIP_LEVEL.NORMAL)
     }
 }
 
@@ -191,10 +192,10 @@ $(function () {
     let activeClass = 'diao_panel_active'
     for(let diao in keyDiao.diaoPkg){
         let diaoName = diao
-        let diaoItem = keyDiao.diaoPkg[diao]
+        // let diaoItem = keyDiao.diaoPkg[diao]
         let diaoDomHTML = '<li diao-name="' + diaoName + '" class="' + activeClass + '">'
         diaoDomHTML += '<img src="imgs/diaohao/' + diaoName + '.png" />'
-        diaoDomHTML += '<span>' + diaoItem.desc + '</span>'
+        // diaoDomHTML += '<span>' + diaoItem.desc + '</span>'
         diaoDomHTML += '</li>'
         diaoPanel.append(diaoDomHTML)
         activeClass = ''

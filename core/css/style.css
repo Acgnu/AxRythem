@@ -28,11 +28,10 @@ body{padding: 0; margin: 0; overflow: hidden; font-family: 'Microsoft YaHei UI'}
 .footage_button_div{position: absolute;top: -33px;right: 0;}
 
 .diao_panel{display: inline-flex;list-style: none;margin: 10px 0 4px 0;padding: 0;}
-.diao_panel li{margin-right: 8px; border:1px solid transparent; cursor: pointer; background: white; border-top-left-radius: 5px; border-bottom-right-radius: 5px;}
-.diao_panel li:hover{border:1px solid #d20000;}
-.diao_panel li img{display: block; height: 50px;}
-.diao_panel li span{display: block; text-align: center; font-size: 13px;}
-.diao_panel_active{background: #d20000 !important; color: white;box-shadow: 0 0 10px red;}
+.diao_panel li{margin-right: 8px; cursor: pointer; opacity: 0.65; transition: .1s;}
+.diao_panel li:hover{ opacity: 1; transform: scale(1.05, 1.05);}
+.diao_panel li img{display: block; height: 50px; border-top-left-radius: 5px; }
+.diao_panel_active{ opacity: 1 !important;}
 .midi_label_span{display: inline-block;margin: 0 0 4px 0;color: #f4b422; width: 100%; font-family: '华文隶书';}
 
 .center_content{display: flex; margin-top: 6px;}
