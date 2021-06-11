@@ -1,6 +1,6 @@
 *{user-select:none;}
 body{padding: 0; margin: 0; background: #ccc;overflow: hidden;}
-header{background: #1b1b1b;}
+header{background: #1b1b1b; text-align: center;}
 .key_pad{width: 100%;height: 120px;background: dimgray;display: inline-flex; border-top: 3px solid #d20000;cursor: pointer;}
 .key_group{width: 13.4771%;height: 100%;display: inline-flex;position: relative;}
 .key_group:first-child{width:3.7736%; }
@@ -19,6 +19,8 @@ header{background: #1b1b1b;}
 .key_black_6{left: 29%;width: 36%;}
 .key_highlight{background: red;}
 .key_highlight_fix{background: red;}
+.key_highlight_fix_midi{background: red;}
+.key_highlight_fix_player{background: red;}
 
 .line_content{width: 400px; flex: 1;}
 .line_group hr{margin:0px 0px; border: 2px solid #000000;cursor: url("imgs/danyinfu.gif") 0 39,auto;}
@@ -27,14 +29,15 @@ header{background: #1b1b1b;}
 .line_group div:hover{background: red;}
 .line_highlight{border-color: red !important; background: red;}
 
-.diao_panel{display: inline-flex; list-style: none; margin: 20px;padding: 0;}
+.diao_panel{display: inline-flex;list-style: none;margin: 20px 0 4px 0;padding: 0;}
 .diao_panel li{margin-right: 8px; border:1px solid transparent; cursor: pointer; background: white; border-top-left-radius: 5px; border-bottom-right-radius: 5px;}
 .diao_panel li:hover{border:1px solid #d20000;}
 .diao_panel li img{display: block; height: 56px;}
 .diao_panel li span{display: block; text-align: center;}
 .diao_panel_active{background: #d20000 !important; color: white;box-shadow: 0 0 10px red;}
+.midi_label_span{display: inline-block;margin: 0 0 4px 0;color: #f4b422;font-family: '华文隶书'; width: 100%;}
 
-.footage_content {width: 100%; background: #1b1b1b; position: absolute; top: 710px; bottom: 0;}
+.footage_content {width: 100%; background: #1b1b1b; position: absolute; top: 720px; bottom: 0;}
 .footage_content section{width: 100%;padding:20px; display: flex; box-sizing: border-box;flex-wrap: wrap;}
 .footage_content section div{position: relative; margin-right: 15px; border-top-left-radius: 5px; border-bottom-right-radius: 5px; cursor: pointer; background: url('imgs/yinfu.png'); background-size: cover; border: 2px solid #1b1b1b;width: 80px; height: 80px;margin-bottom: 20px;}
 .footage_content section div:hover{border-color: #d20000;}
@@ -59,10 +62,19 @@ header{background: #1b1b1b;}
 .footage_small_button{height: 33px; width: 45px; border-left: 1px solid #d20000}
 .start_train_button_active{background: #850000;}
 
-.press_correct{position: absolute; opacity:0;}
+.press_correct{position: absolute; opacity:0; pointer-events: none;}
 .press_correct_ani{animation: press_correct 3s;}
+.div_tip{color: white;padding: 8px 20px 8px 20px;border: 1px solid #ffa9a9;border-radius: 2px;box-shadow: 0 2px 7px 1px #0009;position: absolute;top: 12px;left: 100px; opacity: 0; pointer-events: none; font-family: '华文隶书'}
+.div_tip_ani{animation: tip_show 3s;}
 @-webkit-keyframes press_correct
 {
   from {opacity: 1;}
   to {opacity: 0; transform:translateY(-20px);}
+}
+@-webkit-keyframes tip_show
+{
+  0%   {opacity: 0; }
+  25%  {opacity: 1;transform: translateY(20px)}
+  75%  {opacity: 1;transform: translateY(20px)}
+  100% {opacity: 0;transform: translateY(-20px)}
 }
