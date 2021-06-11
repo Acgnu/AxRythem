@@ -6,7 +6,7 @@ header{background: #1b1b1bab; text-align: center;}
 .key_white{background: rgba(255, 255, 255, 0.85);height: 100%;}
 .key_white:hover, .key_black:hover{background: rgba(255, 0, 0, 0.85);}
 .key_black{ background: rgba(0, 0, 0, 0.95);height: 70%;width: 9%;position: absolute;}
-.key_highlight, .key_highlight_fix, key_highlight_fix_midi, key_highlight_fix_player{background: rgba(255, 0, 0, 0.85);}
+.key_highlight, .key_highlight_fix, .key_highlight_fix_midi, .key_highlight_fix_player{background: rgba(255, 0, 0, 0.85);}
 
 .line_content{width: 400px; flex: 1;}
 .line_group hr{margin:0px 0px; border: 2px solid #000000;cursor: url("../imgs/danyinfu.gif") 0 39,auto;}
