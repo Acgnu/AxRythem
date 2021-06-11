@@ -22,9 +22,9 @@ header{background: #1b1b1b;}
 
 
 .line_content{width: 400px; flex: 1;}
-.line_group hr{margin:0px 0px; border: 2px solid #000000;cursor: pointer;}
+.line_group hr{margin:0px 0px; border: 2px solid #000000;cursor: url("imgs/danyinfu.gif") 0 39,auto;}
 .line_group hr:hover{border-color: red !important;}
-.line_group div{height: 13px; width: 100%;cursor: pointer;}
+.line_group div{height: 13px; width: 100%;cursor: url("imgs/danyinfu.gif") 0 39,auto;}
 .line_group div:hover{background: red;}
 .line_highlight{border-color: red !important; background: red;}
 
@@ -55,10 +55,11 @@ header{background: #1b1b1b;}
 .clear_footage_button{width: 158px;border-top-left-radius: 8px; cursor: pointer;}
 .sample_play_button{width: 33px;border-bottom-right-radius: 8px; cursor: pointer; vertical-align: top;}
 .start_train_button{width: 33px; cursor: pointer; vertical-align: top;}
-.footage_button_hover:hover{background: #3e3e3e; transition: .3s}
+.start_train_button_active{background: #850000;}
+.footage_button_hover:hover{background: #3e3e3e; transition: .3s;}
 
 .press_correct{position: absolute; opacity:0;}
-.press_correct_ani{animation: press_correct 2s;}
+.press_correct_ani{animation: press_correct 3s;}
 @-webkit-keyframes press_correct
 {
   from {opacity: 1;}

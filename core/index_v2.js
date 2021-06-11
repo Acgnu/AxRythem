@@ -373,8 +373,10 @@ $(function () {
             trainEnv.currentLineDom = null
             trainEnv.correctKeyDom = null
             trainEnv.randomAbleLine = []
+            $(this).removeClass('start_train_button_active')
             return
         }
+        $(this).addClass('start_train_button_active')
         let startGroupIndex = 2
         let endGroupIndex = 5
         //获取指定范围的线/间
