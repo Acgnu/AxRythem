@@ -1,6 +1,7 @@
 var footageIndex = 1
 var activeKeyList = []
 var keyFootages = {}
+var audioCacheMap = {}
 const groupInfo = [
     {index: 1, minKey: 1, maxKey: 3},
     {index: 2, minKey: 4, maxKey: 15},
@@ -119,6 +120,18 @@ function getKeyIndex(keyName, group){
 function deactiveAllKey(){
     $('.key_highlight_fix').removeClass('key_highlight_fix')
     activeKeyList = []
+}
+
+function playByKey(keyNum){
+    console.log(keyNum)
+    if(audioCacheMap[keyNum]){
+        audioCacheMap[keyNum].currentTime = 0
+        audioCacheMap[keyNum].play()
+        return
+    }
+    let audio = new Audio('audio/key/' + keyNum + '.mp3')
+    audioCacheMap[keyNum] = audio
+    audio.play()
 }
 
 $(function () {
@@ -259,6 +272,15 @@ $(function () {
         keyFootages = {}
     })
 
+    $('#button_sample_play').click(function(e){
+        if(sheet.isPlaying){
+            clearInterval(sheet.playHandler)
+            sheet.isPlaying = false
+            return
+        }
+        playBySheet(sheet)
+    })
+
     //绑定键盘悬停事件
     // var lineDom;
     // $('.key_white, .key_black').hover(function(e) {
@@ -298,5 +320,48 @@ $(function () {
             }
         })
     })
+
+    $('.key_white, .key_black').mousedown(function (e) {
+        //获取分组
+        let groupIndex = e.target.parentElement.getAttribute('group-index')
+        let keyGroup = groupInfo[groupIndex - 1]
+        //获取所在分组下标
+        let leftElmCount = 0
+        let prevElm = e.target.previousSibling
+        while (prevElm.previousSibling != null) {
+            prevElm = prevElm.previousSibling.previousSibling
+            leftElmCount++
+        }
+        //根据下标获取分组键号
+        let keyNum = keyGroup.minKey + leftElmCount
+        //点亮五线谱
+        //获取当前调号
+        //判断当前点亮的键是否属于升降范围
+        //获取升降前键
+        //点亮线
+        playByKey(keyNum)
+    });
 });
+
+function playBySheet(sheet) {
+    let idx = 0
+    let item = sheet.data[idx]
+    sheet.isPlaying = true
+    sheet.playHandler = setInterval(function () {
+        for (let dataIndex in item){
+            let keyNum = item[dataIndex]
+            if(keyNum == 0)
+                continue
+            playByKey(keyNum)
+        }
+        if(idx + 1 < sheet.data.length){
+            item = sheet.data[++idx]
+        } else if (sheet.loop) {
+            idx = 0
+        } else {
+            clearInterval(sheet.playHandler)
+            sheet.isPlaying = false
+        }
+    }, sheet.rythem)
+}
 
