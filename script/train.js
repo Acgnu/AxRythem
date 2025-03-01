@@ -42,9 +42,9 @@ function playCorrectAnimation(offsetT, offsetL) {
 function onLineTriggerHoverIn(lineDom){
   if(!trainEnv.isTrain){
     //训练模式下, 鼠标悬停到五线谱不显示音名
-    let groupIndex = lineDom.getAttribute('key-group-index');
+    let groupIndex = parseInt(lineDom.getAttribute('key-group-index'));
     let lineName = lineDom.getAttribute('line-name');
-    let groupElement = $(`.key_group[group-index="${groupIndex}"]`);
+    let groupElement = $(`.key_group[group-index="${groupIndex + 1}"]`);
     let keyDom = groupElement.find(`[note-name="${lineName}"]`);
     $('#key-name').text(keyDom.attr('id'))
   }
@@ -62,11 +62,12 @@ function onKeyClickWithTrain(keyDom, offsetT, offsetL) {
   if(trainEnv.isTrain){
     //训练模式
     if(keyDom == trainEnv.correctKeyDom){
-      let groupIndex = parseInt(trainEnv.currentLineDom.getAttribute('key-group-index'));
-      let lineName = trainEnv.currentLineDom.getAttribute('line-name');
-      let groupElement = $(`.key_group[group-index="${groupIndex}"]`);
-      let keyDom = groupElement.find(`[note-name="${lineName}"]`);
-      $('#key-name').text(keyDom.attr('id'))
+      // let groupIndex = parseInt(trainEnv.currentLineDom.getAttribute('key-group-index'));
+      // let lineName = trainEnv.currentLineDom.getAttribute('line-name');
+      // let groupElement = $(`.key_group[group-index="${groupIndex}"]`);
+      // let keyDom = groupElement.find(`[note-name="${lineName}"]`);
+      // $('#key-name').text(keyDom.attr('id'))
+      // console.log(keyDom.attr('id'))
       //如果按对了, 消除上一个线/间, 重新开始生成随机线/间
       reRandomTrainLine()
       //显示动画
