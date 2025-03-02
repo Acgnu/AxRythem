@@ -330,6 +330,8 @@ function getLineDomByKeyDom(keyDom) {
  * @param themePath 主题相对index的路径
  */
 function changeTheme(themePath){
+    console.log(themePath)
+    themePath = 'css/skin.default.css'
     localStorage.setItem('theme', themePath)
     document.getElementById('theme_css').href = themePath
 }
