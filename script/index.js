@@ -133,7 +133,7 @@ function getKeyIndex(keyName, group){
     }
     if('A' == keyName){
         if(group.index == 1){
-            return 2 +  keyDiao.getKeyOffset(keyName);
+            return 1 +  keyDiao.getKeyOffset(keyName);
         }
         return group.minKey  + 9 +  keyDiao.getKeyOffset(keyName)
     }
@@ -158,7 +158,7 @@ $(function () {
     let keyNames = ['C', 'D', 'E', 'F', 'G', 'A', 'B']
     let currentGroup = 9;
     //0-53号键位(标准五线)以外用半透明线表示
-    for(let i = 53; i > 0; i--){
+    for(let i = 52; i > 0; i--){
         let dom;
         if(isDiv){
             dom= document.createElement("div");
@@ -168,7 +168,7 @@ $(function () {
             isDiv = true
         }
         dom.className = "line_triggler"
-        if(i == 25){
+        if(i == 24){
             //中央C用虚线表示
             dom.style.borderStyle = 'dashed'
         }

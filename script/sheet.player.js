@@ -4,13 +4,13 @@ var AUDIO_CACHE_MAP = {}
  * 根据曲谱样本播放音频
  * @param sheet
  */
+const KEY_STYLE_ON_PLAY_CLASS = 'key_highlight_fix_player'
 function playBySheet(sheet) {
-  let activeKeyClass = 'key_highlight_fix_player'
   let idx = 0
   let item = sheet.data[idx]
   sheet.isPlaying = true
   sheet.playHandler = setInterval(function () {
-    $('.' + activeKeyClass).removeClass(activeKeyClass)
+    $('.' + KEY_STYLE_ON_PLAY_CLASS).removeClass(KEY_STYLE_ON_PLAY_CLASS)
     for (let dataIndex in item){
       let keyNum = item[dataIndex]
       if(keyNum == 0)
@@ -22,7 +22,7 @@ function playBySheet(sheet) {
       let keyGroupDom = $('.key_group[group-index=' + keyboardGroup.groupIndex + ']')
       let keyDom = keyGroupDom.children()[keyboardGroup.keyInGroupIndex]
       let keyDomJQ = $(keyDom)
-      keyDomJQ.addClass(activeKeyClass)
+      keyDomJQ.addClass(KEY_STYLE_ON_PLAY_CLASS)
     }
 
     if(idx + 1 < sheet.data.length){
@@ -61,6 +61,7 @@ $(function () {
     if(sheet.isPlaying){
       clearInterval(sheet.playHandler)
       sheet.isPlaying = false
+      $('.' + KEY_STYLE_ON_PLAY_CLASS).removeClass(KEY_STYLE_ON_PLAY_CLASS)
       return
     }
     playBySheet(sheet)
