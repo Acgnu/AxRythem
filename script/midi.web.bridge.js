@@ -20,6 +20,7 @@ var onMidiInput = function (type, key, volencity) {
   let lineDomJQ = $(lineDom)
   //按下时点亮
   if(type == 144){
+    $('#key-name').text(keyDomJQ.attr('id'))
     playByKey(webKeyNum)
     keyDomJQ.addClass(activeKeyClass)
     lineDomJQ.addClass(activeLineClass)
