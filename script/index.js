@@ -180,7 +180,7 @@ $(function () {
             keyNameIndex = 6
             currentGroup--;
         }
-        if((i < 15 || i > 35) && isDiv){
+        if((i < 14 || i > 35) && isDiv){
             // dom.style.borderColor = '#FFFFFF';
             dom.style.borderColor = '#b1b1b1';
         }
@@ -204,7 +204,7 @@ $(function () {
     $('.line_triggler').hover(function(e) {
         keyDom = getKeyDomByLineDom(e.target)
         $(keyDom).addClass('key_highlight');
-        onLineTriggerHoverIn(e.target)
+        onLineTriggerHoverIn(keyDom)
     }, function (e) {
         if(keyDom){
             $(keyDom).removeClass('key_highlight');
