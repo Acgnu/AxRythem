@@ -1,4 +1,5 @@
 const  ANIMATE_DOM_ID = 'press_correct_img'
+const TRAIN_NOTE_MARKER_ID = 'train_note_marker'
 const TRAIN_CLASS_NAME = {
   PRESS_CORRECT_ANI:'press_correct_ani',
   LINE_HIGHLIGHT:'line_highlight',
@@ -19,6 +20,30 @@ const TRAIN_CLASS_NAME = {
  * }}
  */
 var trainEnv = {isTrain:false, randomAbleLine:[], currentLineDom:null, correctKeyDom:null}
+
+function getTrainNoteMarker() {
+  let marker = $('#' + TRAIN_NOTE_MARKER_ID)
+  if(!marker.length){
+    marker = $('<span id="' + TRAIN_NOTE_MARKER_ID + '" class="train_note_marker" aria-hidden="true">♪</span>')
+    $('.line_group').append(marker)
+  }
+  return marker
+}
+
+function showTrainNoteMarker(lineDom) {
+  if(!lineDom){
+    return
+  }
+  let lineGroupDom = $('.line_group')[0]
+  let lineRect = lineDom.getBoundingClientRect()
+  let lineGroupRect = lineGroupDom.getBoundingClientRect()
+  let markerTop = lineRect.top - lineGroupRect.top + lineRect.height / 2
+  getTrainNoteMarker().css('top', markerTop).addClass('is_visible')
+}
+
+function hideTrainNoteMarker() {
+  $('#' + TRAIN_NOTE_MARKER_ID).removeClass('is_visible')
+}
 
 /**
  * 播放按键正确动画
@@ -71,17 +96,14 @@ function onKeyClickWithTrain(keyDom, offsetT, offsetL) {
  * 重新生成随机五线谱选中线
  */
 function reRandomTrainLine() {
-  if(trainEnv.currentLineDom){
-    $(trainEnv.currentLineDom).removeClass(TRAIN_CLASS_NAME.LINE_HIGHLIGHT)
-  }
   let minRandomIdx = 0
   let maxRandomIdx = trainEnv.randomAbleLine.length - 1
   let luckyLineIndex = Math.floor(Math.random() * (maxRandomIdx - minRandomIdx + 1)) + minRandomIdx
   trainEnv.currentLineDom = trainEnv.randomAbleLine[luckyLineIndex]
   //获取此线/间对应的键位
   trainEnv.correctKeyDom = getKeyDomByLineDom(trainEnv.randomAbleLine[luckyLineIndex])
-  //点亮线/间
-  $(trainEnv.currentLineDom).addClass(TRAIN_CLASS_NAME.LINE_HIGHLIGHT)
+  // 在选中线/间的中心显示音符
+  showTrainNoteMarker(trainEnv.currentLineDom)
 }
 
 /**
@@ -111,7 +133,7 @@ $(function () {
     if(!trainEnv.isTrain){
       //停止训练
       if(trainEnv.currentLineDom){
-        $(trainEnv.currentLineDom).removeClass(TRAIN_CLASS_NAME.LINE_HIGHLIGHT)
+        hideTrainNoteMarker()
       }
       trainEnv.currentLineDom = null
       trainEnv.correctKeyDom = null
@@ -151,5 +173,11 @@ $(function () {
     }
     collectTrainLine('1-7')
     reRandomTrainLine()
+  })
+
+  $(window).resize(function () {
+    if(trainEnv.isTrain){
+      showTrainNoteMarker(trainEnv.currentLineDom)
+    }
   })
 })

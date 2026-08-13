@@ -199,6 +199,14 @@ $(function () {
         activeClass = ''
     }
 
+    // 用文本音符代替图片光标
+    let staffNoteCursor = $('<span class="staff_note_cursor" aria-hidden="true">♪</span>').appendTo('body')
+    $('.line_triggler').on('mouseenter mousemove', function(e) {
+        staffNoteCursor.css({left: e.clientX, top: e.clientY}).addClass('is_visible')
+    }).on('mouseleave', function() {
+        staffNoteCursor.removeClass('is_visible')
+    })
+
     //绑定五线谱鼠标悬停事件
     let keyDom;
     $('.line_triggler').hover(function(e) {
