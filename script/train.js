@@ -26,8 +26,48 @@ function getTrainNoteMarker() {
   if(!marker.length){
     marker = $('<span id="' + TRAIN_NOTE_MARKER_ID + '" class="train_note_marker" aria-hidden="true">♪</span>')
     $('.line_group').append(marker)
+    alignTrainNoteHead(marker[0])
   }
   return marker
+}
+
+function alignTrainNoteHead(marker) {
+  const style = getComputedStyle(marker)
+  const size = parseFloat(style.fontSize)
+  const canvas = document.createElement('canvas')
+  canvas.width = canvas.height = Math.ceil(size * 3)
+  const context = canvas.getContext('2d')
+  context.font = style.fontSize + ' ' + style.fontFamily
+  const metrics = context.measureText(marker.textContent)
+  context.fillText(marker.textContent, size, size * 2)
+
+  // The lower half of this glyph contains the notehead and the narrow stem.
+  const pixels = context.getImageData(0, 0, canvas.width, canvas.height).data
+  const firstRow = Math.floor(size * 2 + (metrics.actualBoundingBoxDescent - metrics.actualBoundingBoxAscent) / 2)
+  const rows = []
+  for(let y = firstRow; y < canvas.height; y++){
+    let width = 0
+    for(let x = 0; x < canvas.width; x++){
+      if(pixels[(y * canvas.width + x) * 4 + 3] > 127){
+        width++
+      }
+    }
+    rows.push({y, width})
+  }
+  const maxWidth = Math.max(...rows.map(row => row.width))
+  const headRows = rows.filter(row => row.width > maxWidth / 2)
+  if(!headRows.length){
+    return
+  }
+  const headCenter = (headRows[0].y + headRows[headRows.length - 1].y + 1) / 2
+
+  // A zero-height inline box exposes the actual text baseline, including font fallback.
+  const baseline = document.createElement('span')
+  baseline.style.cssText = 'display:inline-block;width:0;height:0;vertical-align:baseline'
+  marker.appendChild(baseline)
+  const baselineOffset = baseline.getBoundingClientRect().top - marker.getBoundingClientRect().top
+  baseline.remove()
+  marker.style.setProperty('--train-note-offset', -(baselineOffset + headCenter - size * 2) + 'px')
 }
 
 function showTrainNoteMarker(lineDom) {
@@ -115,7 +155,7 @@ function collectTrainLine(trainRange){
   trainEnv.randomAbleLine.length = 0
   // trainEnv.randomAbleLine.splice(0, trainEnv.randomAbleLine.length)
   //获取指定范围的线/间
-  $('.line_group').children().each(function (idx, val) {
+  $('.line_group').children('.line_triggler').each(function (idx, val) {
     let groupIndex = parseInt(val.getAttribute('key-group-index'))
     if (groupIndex > trainRange.split('-')[1] || groupIndex < trainRange.split('-')[0]) {
       return

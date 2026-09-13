@@ -60,8 +60,10 @@ body{padding: 0; margin: 0; overflow: hidden; font-family: 'Microsoft YaHei UI'}
     left: 50%;
     z-index: 2;
     opacity: 0;
-    transform: translate(-50%, -50%);
-    text-shadow: -1px -1px 0 #fff, 1px -1px 0 #fff, -1px 1px 0 #fff, 1px 1px 0 #fff;
+    white-space: nowrap;
+    transform: translate(-50%, var(--train-note-offset, -75%));
+    -webkit-text-stroke: 2px #fff;
+    paint-order: stroke fill;
 }
 .train_note_marker.is_visible{opacity: 1;}
 
