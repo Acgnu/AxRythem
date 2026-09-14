@@ -136,12 +136,20 @@ function onKeyClickWithTrain(keyDom, offsetT, offsetL) {
  * 重新生成随机五线谱选中线
  */
 function reRandomTrainLine() {
-  let minRandomIdx = 0
-  let maxRandomIdx = trainEnv.randomAbleLine.length - 1
-  let luckyLineIndex = Math.floor(Math.random() * (maxRandomIdx - minRandomIdx + 1)) + minRandomIdx
-  trainEnv.currentLineDom = trainEnv.randomAbleLine[luckyLineIndex]
+  let candidates = trainEnv.randomAbleLine.filter(line => line !== trainEnv.currentLineDom)
+  if(!candidates.length){
+    candidates = trainEnv.randomAbleLine
+  }
+  if(!candidates.length){
+    trainEnv.currentLineDom = null
+    trainEnv.correctKeyDom = null
+    hideTrainNoteMarker()
+    return
+  }
+  let luckyLineIndex = Math.floor(Math.random() * candidates.length)
+  trainEnv.currentLineDom = candidates[luckyLineIndex]
   //获取此线/间对应的键位
-  trainEnv.correctKeyDom = getKeyDomByLineDom(trainEnv.randomAbleLine[luckyLineIndex])
+  trainEnv.correctKeyDom = getKeyDomByLineDom(trainEnv.currentLineDom)
   // 在选中线/间的中心显示音符
   showTrainNoteMarker(trainEnv.currentLineDom)
 }
