@@ -8,6 +8,10 @@ const TRAIN_CLASS_NAME = {
   TRAIN_OPTION_DIV_SHOW_ANI:'train_option_div_show_ani',
   TRAIN_OPTION_DIV_HIDE_ANI:'train_option_div_hide_ani',
   TRAIN_OP_BUTTON_TOP:'train_op_button_top',
+  //训练模式标记, 挂在五线谱容器上, 用于隐藏所有加线
+  LINE_GROUP_TRAIN:'line_group_train',
+  //谱表外的加线(含中央C虚线), 训练模式下按需显示
+  LINE_LEDGER_VISIBLE:'line_ledger_visible',
 }
 
 /**
@@ -133,6 +137,62 @@ function onKeyClickWithTrain(keyDom, offsetT, offsetL) {
 }
 
 /**
+ * 五线谱关键位置, 数值为节点的 staff-index (52在最上, 1在最下)
+ * 上加线自34向上, 下加线自14向下, 24是谱表中间的中央C虚线
+ * @type {{TOP_LINE: number, BOTTOM_LINE: number, CENTER_LINE: number}}
+ */
+const TRAIN_STAFF_BOUND = {TOP_LINE:34, BOTTOM_LINE:14, CENTER_LINE:24}
+
+/**
+ * 计算谱面位置对应的加线信息
+ * @param staffIndex 谱面位置
+ * @returns {{side: string, ring: number}} side: up上加线 down下加线 center中央C, ring: 从谱表向外第几条, 0表示无需加线
+ */
+function getLedgerInfo(staffIndex) {
+  //谱表中间的中央C线, 只有正好落在该线上的音符才需要
+  if(TRAIN_STAFF_BOUND.CENTER_LINE == staffIndex){
+    return {side:'center', ring:1}
+  }
+  if(staffIndex > TRAIN_STAFF_BOUND.TOP_LINE){
+    return {side:'up', ring:Math.floor((staffIndex - TRAIN_STAFF_BOUND.TOP_LINE) / 2)}
+  }
+  if(staffIndex < TRAIN_STAFF_BOUND.BOTTOM_LINE){
+    return {side:'down', ring:Math.floor((TRAIN_STAFF_BOUND.BOTTOM_LINE - staffIndex) / 2)}
+  }
+  return {side:'', ring:0}
+}
+
+/**
+ * 显示训练音符所在的加线, 同时显示该加线到谱表之间的所有加线
+ * 例如命中上加3线时, 上加1线, 2线一起显示
+ * @param lineDom 训练音符所在的线/间
+ */
+function revealTrainLedger(lineDom) {
+  let lineGroup = $('.line_group')
+  lineGroup.children('.' + TRAIN_CLASS_NAME.LINE_LEDGER_VISIBLE).removeClass(TRAIN_CLASS_NAME.LINE_LEDGER_VISIBLE)
+  if(!lineDom){
+    return
+  }
+  let targetInfo = getLedgerInfo(parseInt(lineDom.getAttribute('staff-index')))
+  if(targetInfo.ring <= 0){
+    return
+  }
+  lineGroup.children('.line_ledger').each(function (idx, val) {
+    let eachInfo = getLedgerInfo(parseInt(val.getAttribute('staff-index')))
+    if(eachInfo.side == targetInfo.side && eachInfo.ring <= targetInfo.ring){
+      $(val).addClass(TRAIN_CLASS_NAME.LINE_LEDGER_VISIBLE)
+    }
+  })
+}
+
+/**
+ * 隐藏所有加线
+ */
+function hideAllTrainLedger() {
+  $('.line_group').children('.' + TRAIN_CLASS_NAME.LINE_LEDGER_VISIBLE).removeClass(TRAIN_CLASS_NAME.LINE_LEDGER_VISIBLE)
+}
+
+/**
  * 重新生成随机五线谱选中线
  */
 function reRandomTrainLine() {
@@ -144,6 +204,7 @@ function reRandomTrainLine() {
     trainEnv.currentLineDom = null
     trainEnv.correctKeyDom = null
     hideTrainNoteMarker()
+    hideAllTrainLedger()
     return
   }
   let luckyLineIndex = Math.floor(Math.random() * candidates.length)
@@ -152,6 +213,8 @@ function reRandomTrainLine() {
   trainEnv.correctKeyDom = getKeyDomByLineDom(trainEnv.currentLineDom)
   // 在选中线/间的中心显示音符
   showTrainNoteMarker(trainEnv.currentLineDom)
+  //显示训练音符所在的加线
+  revealTrainLedger(trainEnv.currentLineDom)
 }
 
 /**
@@ -186,6 +249,9 @@ $(function () {
       trainEnv.currentLineDom = null
       trainEnv.correctKeyDom = null
       trainEnv.randomAbleLine = []
+      //恢复显示所有加线
+      $('.line_group').removeClass(TRAIN_CLASS_NAME.LINE_GROUP_TRAIN)
+      hideAllTrainLedger()
       $(this).removeClass(TRAIN_CLASS_NAME.START_TRAIN_BUTTON_ACTIVE)
       trainOpBtn.removeClass(TRAIN_CLASS_NAME.TRAIN_OP_BUTTON_ACTIVE)
       trainOpDiv.removeClass(TRAIN_CLASS_NAME.TRAIN_OPTION_DIV_SHOW_ANI)
@@ -200,6 +266,8 @@ $(function () {
       trainOpBtn[1].classList.add(TRAIN_CLASS_NAME.TRAIN_OP_BUTTON_ACTIVE)
     }
     collectTrainLine(trainRange)
+    //训练模式下隐藏所有加线
+    $('.line_group').addClass(TRAIN_CLASS_NAME.LINE_GROUP_TRAIN)
     $(this).addClass(TRAIN_CLASS_NAME.START_TRAIN_BUTTON_ACTIVE)
     trainOpDiv.addClass(TRAIN_CLASS_NAME.TRAIN_OPTION_DIV_SHOW_ANI)
     trainOpDiv.removeClass(TRAIN_CLASS_NAME.TRAIN_OPTION_DIV_HIDE_ANI)

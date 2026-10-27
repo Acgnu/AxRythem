@@ -39,6 +39,9 @@ body{padding: 0; margin: 0; overflow: hidden; font-family: 'Microsoft YaHei UI'}
 .center_content section:last-child{flex: 1.5; display: flex;align-items: center;}
 
 .line_group{position: relative;}
+/* 训练模式下隐藏所有加线(含中央C虚线), 只显示训练音符所在加线及其到谱表之间的加线 */
+.line_group.line_group_train .line_ledger{visibility: hidden;}
+.line_group.line_group_train .line_ledger.line_ledger_visible{visibility: visible;}
 .staff_note_cursor,
 .train_note_marker{
     font-family: "Segoe UI Symbol", "Noto Sans Symbols 2", sans-serif;

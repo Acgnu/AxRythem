@@ -168,9 +168,12 @@ $(function () {
             isDiv = true
         }
         dom.className = "line_triggler"
+        //谱面位置, 52在最上, 1在最下, 训练模式据此计算需要显示的加线
+        dom.setAttribute('staff-index', i)
         if(i == 24){
-            //中央C用虚线表示
+            //中央C用虚线表示, 中央C所在线也是加线
             dom.style.borderStyle = 'dashed'
+            dom.classList.add('line_ledger')
         }
         //根据调号定位到具体键
         let lineName = keyNames[keyNameIndex--]
@@ -183,6 +186,8 @@ $(function () {
         if((i < 14 || i > 35) && isDiv){
             // dom.style.borderColor = '#FFFFFF';
             dom.style.borderColor = '#b1b1b1';
+            //谱表外的上加线/下加线, 训练模式下仅显示训练音符所在的加线
+            dom.classList.add('line_ledger')
         }
         lineGroup.append(dom)
     }
