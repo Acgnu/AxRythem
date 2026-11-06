@@ -1,5 +1,19 @@
 //音频缓存 key = 琴键号(1-88), value = 音频对象
 var AUDIO_CACHE_MAP = {}
+var audioEnabled = false
+
+function setAudioEnabled(enabled){
+  audioEnabled = enabled
+  if(!enabled){
+    Object.values(AUDIO_CACHE_MAP).forEach(function(audio){
+      audio.pause()
+      audio.currentTime = 0
+    })
+  }
+  let label = enabled ? '关闭音频' : '开启音频'
+  $('#button_audio').attr({'aria-pressed': String(enabled), 'aria-label': label, title: label})
+  $('#status_audio').prop('hidden', enabled)
+}
 /**
  * 根据曲谱样本播放音频
  * @param sheet
@@ -41,21 +55,20 @@ function playBySheet(sheet) {
  * @param keyNum (1-88)
  */
 function playByKey(keyNum){
-  if(AUDIO_CACHE_MAP[keyNum]){
-    AUDIO_CACHE_MAP[keyNum].currentTime = 0
-    AUDIO_CACHE_MAP[keyNum].play()
-    return
-  }
-  let audio = new Audio('audio/key/' + keyNum + '.mp3')
-  audio.play()
-  if(audio.paused){
-    showTip('Audio can not play before you click anywhere of this page', TIP_LEVEL.ERROR)
-  }else{
-    AUDIO_CACHE_MAP[keyNum] = audio
-  }
+  if(!audioEnabled) return
+  let audio = AUDIO_CACHE_MAP[keyNum] || (AUDIO_CACHE_MAP[keyNum] = new Audio('audio/key/' + keyNum + '.mp3'))
+  audio.currentTime = 0
+  audio.play().catch(function(error){
+    if(error.name === 'AbortError' || !audioEnabled) return
+    setAudioEnabled(false)
+    showTip('音频播放失败，请重新开启音频', TIP_LEVEL.ERROR)
+  })
 }
 
 $(function () {
+  $('#button_audio').click(function(){
+    setAudioEnabled(!audioEnabled)
+  })
 //绑定播放样本曲谱按钮
   $('#button_sample_play').click(function(e){
     if(sheet.isPlaying){

@@ -288,6 +288,13 @@ $(function () {
         changeTheme('css/skin.default.css' === curTheme ? 'css/skin.acg.css' : 'css/skin.default.css')
         $(this).attr('src', 'css/skin.default.css' === curTheme ? 'imgs/default.png' : 'imgs/acg.png')
     })
+
+    // 委托事件也能覆盖动态创建的调号和复音。
+    $(document).on('mouseover focusin mouseout focusout', function(e){
+        let target = /out$/.test(e.type) ? e.relatedTarget : e.target
+        let control = $(target).closest('[data-help], [title]')
+        $('#status_help').text(control.attr('data-help') || control.attr('title') || '将鼠标移到控件上查看操作说明')
+    })
 })
 
 /**

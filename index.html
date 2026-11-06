@@ -13,12 +13,12 @@
 <body>
 <header>
     <!-- 调号列表 -->
-    <ul class="diao_panel"></ul>
+    <ul class="diao_panel" data-help="点击调号切换大调"></ul>
     <!-- MIDI设备名称显示框 -->
-    <span id="midi_device_label" class="midi_label_span">No MIDI Input Device</span>
+    <span id="midi_device_label" class="midi_label_span" data-help="未检测到MIDI键盘, 您可能需要在启动浏览器前先连接MIDI键盘, 若在浏览器启动后连接, 可尝试重启浏览器">No MIDI Input Device</span>
 </header>
 <article>
-    <div class="key_pad">
+    <div class="key_pad" data-help="点击琴键或使用 MIDI 键盘弹奏">
         <!-- note-name 指音高助记 (音符名) -->
         <section class="key_group" group-index="1">
             <div class="key_white" note-name="A2"></div>
@@ -130,7 +130,7 @@
 </article>
 <article class="center_content">
     <section>
-        <div class="skin_img_container">
+        <div class="skin_img_container" data-help="点击图片切换皮肤">
             <img src="imgs/acg.png" class="skin_img_button" title="换肤"/>
         </div>
         <!-- 音符名显示框 -->
@@ -138,13 +138,13 @@
     </section>
     <section class="line_content">
         <!-- 五线谱列表 -->
-        <div class="line_group"></div>
+        <div class="line_group" data-help="点击谱线选择音符，右键取消选择"></div>
     </section>
     <section class="footage_manage">
-        <button class="func_button_base create_button" id="button_create_footage">创建复音</button>
+        <button class="func_button_base create_button" id="button_create_footage" data-help="将当前选择的音符保存为复音">创建复音</button>
         <div class="train_option_div">
-            <button class="func_button_base train_op_button train_op_button_top">常用</button>
-            <button class="func_button_base train_op_button train_op_button_btm">全部</button>
+            <button class="func_button_base train_op_button train_op_button_top" data-help="使用常用音域进行识谱训练">常用</button>
+            <button class="func_button_base train_op_button train_op_button_btm" data-help="使用全部音域进行识谱训练">全部</button>
         </div>
     </section>
 </article>
@@ -152,12 +152,19 @@
 <div class="footage_content">
     <div class="footage_button_div">
         <div class="footage_button_border_div"></div>
-        <button class="footage_button_base clear_footage_button footage_button_hover" id="button_footage_remove_all">清空复音</button>
-        <button class="footage_button_base footage_small_button footage_button_hover" id="button_start_train" title="开始训练">♞</button>
-        <button class="footage_button_base footage_small_button footage_button_hover" id="button_sample_play" title="播放示例">♫</button>
+        <button class="footage_button_base clear_footage_button footage_button_hover" id="button_footage_remove_all" data-help="删除所有已保存的复音">清空复音</button>
+        <button class="footage_button_base footage_small_button footage_button_hover" id="button_start_train" title="开始训练" data-help="点击开始或停止识谱训练">♞</button>
+        <button class="footage_button_base footage_small_button footage_button_hover" id="button_sample_play" title="播放示例" data-help="点击播放或停止示例曲谱">♫</button>
+        <button class="footage_button_base footage_small_button footage_button_hover" id="button_audio" title="开启音频" aria-label="开启音频" aria-pressed="false" data-help="点击开启或关闭音频，关闭后所有操作均保持静音">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="m11 5-6 4H2v6h3l6 4z"/>
+                <path class="audio_off_icon" d="m17 9 5 6m0-6-5 6"/>
+                <path class="audio_on_icon" d="M15.54 8.46a5 5 0 0 1 0 7.08m3.53-10.61a10 10 0 0 1 0 14.14"/>
+            </svg>
+        </button>
     </div>
     <!--复音列表-->
-    <section id="footage_list"></section>
+    <section id="footage_list" data-help="点击复音选择或播放，左右方向键切换，点击减号删除"></section>
 </div>
 
 </div>
@@ -165,6 +172,13 @@
 <img src="imgs/emo.png" class="press_correct" id="press_correct_img"/>
 <!--提示气泡-->
 <div id="div_tip" class="div_tip"></div>
+<footer class="status_bar">
+    <span id="status_help">将鼠标移到控件上查看操作说明</span>
+    <span class="status_messages" role="status">
+        <span id="status_midi">MIDI键盘未连接</span>
+        <span id="status_audio">音频关闭</span>
+    </span>
+</footer>
 </body>
 
 <script src="./script/jquery-3.7.1.min.js"></script>

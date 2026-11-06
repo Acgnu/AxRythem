@@ -7,6 +7,10 @@ function onMIDISuccess( midiAccess ) {
     listInputsAndOutputs(MIDIAccess)
   }
   startLoggingMIDIInput(MIDIAccess, null)
+  MIDIAccess.onstatechange = function(){
+    listInputsAndOutputs(MIDIAccess)
+    startLoggingMIDIInput(MIDIAccess, null)
+  }
 }
 
 function onMIDIFailure(msg) {
@@ -17,6 +21,7 @@ function listInputsAndOutputs( midiAccess ) {
   let intpuDevList = []
   for (let entry of midiAccess.inputs) {
     let input = entry[1];
+    if(input.state === 'disconnected') continue
     let deviceName = input.manufacturer + ' ' + input.name;
     // console.log( "Input port [type:'" + input.type + "'] id:'" + input.id +
     //     "' manufacturer:'" + input.manufacturer + "' name:'" + input.name +

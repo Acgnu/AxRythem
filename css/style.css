@@ -25,6 +25,16 @@ body{padding: 0; margin: 0; overflow: hidden; font-family: 'Microsoft YaHei UI'}
 .footage_content section div div:hover{background: #3e3e3e; transition: .3s;}
 .footage_active{border-color: #d20000 !important; box-shadow: 0 0 10px 0px red;}
 .footage_button_div{position: absolute;top: -33px;right: 0;}
+.footage_content{bottom: 26px;overflow: visible;}
+#footage_list{height: 100%;overflow-y: auto;align-content: flex-start;}
+#button_audio svg{vertical-align: middle;}
+#button_audio .audio_on_icon,
+#button_audio[aria-pressed="true"] .audio_off_icon{display: none;}
+#button_audio[aria-pressed="true"] .audio_on_icon{display: inline;}
+.status_bar{position: fixed;bottom: 0;left: 0;right: 0;height: 26px;box-sizing: border-box;display: flex;align-items: center;gap: 16px;padding: 0 12px;background: #252525;color: #ccc;border-top: 1px solid #d20000;font: 12px/1.4 "Microsoft YaHei UI", sans-serif;z-index: 10;}
+#status_help{flex: 1;min-width: 0;overflow: hidden;text-overflow: ellipsis;white-space: nowrap;}
+.status_messages{flex-shrink: 0;color: white;}
+#status_midi:not([hidden]) + #status_audio:not([hidden]){margin-left: 12px;padding-left: 12px;border-left: 1px solid #d20000;}
 
 .diao_panel{display: inline-flex;list-style: none;margin: 10px 0 4px 0;padding: 0;}
 .diao_panel li{margin-right: 8px; cursor: pointer; opacity: 0.65; transition: .1s;}
