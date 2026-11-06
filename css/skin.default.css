@@ -1,4 +1,4 @@
-html{background: #ccc; }
+html{background: #ccc; --panel-background: #1b1b1b; --panel-hover: #3e3e3e;}
 header{background: #1b1b1b; text-align: center;}
 .key_pad{width: 100%;height: 120px;background: dimgray;display: inline-flex; border-top: 3px solid #d20000;cursor: pointer;}
 .key_group div{border: 1px solid black; border-top:none; border-left: none;flex-grow:1 ;}
@@ -14,16 +14,11 @@ header{background: #1b1b1b; text-align: center;}
 .line_group div:hover{background: red;}
 .line_highlight, .line_highlight_midi{border-color: red !important; background: red;}
 
-.footage_content {width: 100%; background: #1b1b1b; position: absolute; top: 682px; bottom: 0;}
 .footage_content section div{background: url('../imgs/yinfu.png');}
-.footage_button_border_div{float: left;width: 36px;height: 17px;border-top: 2px solid #d00000;transform: rotate(115deg) translate(-4px, -17px);background: #cccccc;}
 
 .func_button_base{background: black; outline: none;border: 2px solid #d20000; color: white;cursor: pointer;}
 .create_button{width: 70px;height: 70px; margin-left: 50px; border-radius: 50%;}
 .create_button:hover{background: #3e3e3e; transition: .3s}
-.footage_button_base{background: #1b1b1b;outline: none; border: none; border-top: 2px solid #d20000;color: white;height: 33px;vertical-align: top;margin-right: -5px;cursor: pointer;}
-.footage_button_hover:hover{background: #3e3e3e; transition: .3s;}
 .clear_footage_button{width: 135px;}
-.footage_small_button{height: 33px; width: 45px; border-left: 1px solid #d20000}
-.start_train_button_active{background: #850000;}
+.footage_button_base.start_train_button_active{background: #850000;}
 .train_op_button_active{background: #850000;}

@@ -1,0 +1,14 @@
+**
+!Dockerfile
+!index.html
+!favorite.ico
+!css/
+!css/**
+!script/
+!script/**
+!sheets/
+!sheets/**
+!imgs/
+!imgs/**
+!audio/
+!audio/**

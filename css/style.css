@@ -24,14 +24,25 @@ body{padding: 0; margin: 0; overflow: hidden; font-family: 'Microsoft YaHei UI'}
 .footage_content section div div{width: 18px;height: 18px;background: black;border-radius: 50%;position: relative;top: -10px;right: -68px;color: white;text-align: center;font-size: 32px;line-height: 13px;border: 3px solid #d20000;}
 .footage_content section div div:hover{background: #3e3e3e; transition: .3s;}
 .footage_active{border-color: #d20000 !important; box-shadow: 0 0 10px 0px red;}
-.footage_button_div{position: absolute;top: -33px;right: 0;}
-.footage_content{bottom: 26px;overflow: visible;}
+.footage_toolbar{position: absolute;top: -34px;left: 0;right: 0;height: 34px;display: flex;}
+.footage_toolbar::before{content: "";flex: 1;min-width: 0;align-self: flex-end;border-top: 2px solid #d20000;}
+.footage_curve{position: absolute;left: -44px;top: 0;width: calc(100% + 44px);height: 34px;overflow: visible;}
+.footage_curve_fill{fill: var(--panel-background);transition: fill .3s;}
+.footage_curve_line{fill: none;stroke: #d20000;stroke-width: 2;}
+.footage_button_div{display: flex;flex-shrink: 0;height: 34px;margin-left: 44px;}
+.footage_button_base{height: 34px;margin: 0;background: var(--panel-background);outline: none;border: none;border-top: 2px solid #d20000;color: white;cursor: pointer;}
+.footage_button_hover:hover{background: var(--panel-hover);transition: .3s;}
+.footage_small_button{width: 45px;border-left: 1px solid #d20000;}
+#button_footage_remove_all{position: relative;border-top: none;background: transparent;}
+#button_footage_remove_all span{position: relative;pointer-events: none;}
+#button_footage_remove_all:hover .footage_curve_fill{fill: var(--panel-hover);}
+.footage_content{position: absolute;top: 682px;bottom: 26px;width: 100%;background: var(--panel-background);}
 #footage_list{height: 100%;overflow-y: auto;align-content: flex-start;}
 #button_audio svg{vertical-align: middle;}
 #button_audio .audio_on_icon,
 #button_audio[aria-pressed="true"] .audio_off_icon{display: none;}
 #button_audio[aria-pressed="true"] .audio_on_icon{display: inline;}
-.status_bar{position: fixed;bottom: 0;left: 0;right: 0;height: 26px;box-sizing: border-box;display: flex;align-items: center;gap: 16px;padding: 0 12px;background: #252525;color: #ccc;border-top: 1px solid #d20000;font: 12px/1.4 "Microsoft YaHei UI", sans-serif;z-index: 10;}
+.status_bar{position: fixed;bottom: 0;left: 0;right: 0;height: 26px;box-sizing: border-box;display: flex;align-items: center;gap: 16px;padding: 0 12px;background: var(--panel-background);color: #ccc;border-top: 1px solid #d20000;font: 12px/1.4 "Microsoft YaHei UI", sans-serif;z-index: 10;}
 #status_help{flex: 1;min-width: 0;overflow: hidden;text-overflow: ellipsis;white-space: nowrap;}
 .status_messages{flex-shrink: 0;color: white;}
 #status_midi:not([hidden]) + #status_audio:not([hidden]){margin-left: 12px;padding-left: 12px;border-left: 1px solid #d20000;}
