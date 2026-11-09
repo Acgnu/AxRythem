@@ -197,8 +197,10 @@ $(function () {
     let activeClass = 'diao_panel_active'
     for(let diao in keyDiao.diaoPkg){
         let diaoName = diao
+        let info = keyDiao.diaoPkg[diao]
+        let notes = info.blackKeys.map(key => (info.offset > 0 ? '升' : '降') + key).join('、') || '无升降音'
         let diaoDomHTML = '<li diao-name="' + diaoName + '" class="' + activeClass + '">'
-        diaoDomHTML += '<img src="imgs/diaohao/' + diaoName + '.png" title="' + keyDiao.diaoPkg[diao].desc + '"/>'
+        diaoDomHTML += '<img src="imgs/diaohao/' + diaoName + '.png" title="' + info.desc + ' - ' + notes + '"/>'
         diaoDomHTML += '</li>'
         diaoPanel.append(diaoDomHTML)
         activeClass = ''
@@ -287,13 +289,6 @@ $(function () {
         let curTheme = localStorage.getItem('theme')
         changeTheme('css/skin.default.css' === curTheme ? 'css/skin.acg.css' : 'css/skin.default.css')
         $(this).attr('src', 'css/skin.default.css' === curTheme ? 'imgs/default.png' : 'imgs/acg.png')
-    })
-
-    // 委托事件也能覆盖动态创建的调号和复音。
-    $(document).on('mouseover focusin mouseout focusout', function(e){
-        let target = /out$/.test(e.type) ? e.relatedTarget : e.target
-        let control = $(target).closest('[data-help], [title]')
-        $('#status_help').text(control.attr('data-help') || control.attr('title') || '将鼠标移到控件上查看操作说明')
     })
 })
 

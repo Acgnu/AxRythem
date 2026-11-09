@@ -35,10 +35,9 @@ var onMidiInput = function (type, key, volencity) {
   }
 }
 
-var midiDisconnectedHelp = $('#midi_device_label').attr('data-help')
+var midiDisconnectedHelp = $('#midi_device_label').attr('title')
 var onMidiSuccess = function (inputDeviceList) {
   let connected = inputDeviceList.length > 0
-  $('#status_midi').prop('hidden', connected)
   $('#midi_device_label').text(connected ? inputDeviceList[0] : 'No MIDI Input Device')
-    .attr('data-help', connected ? null : midiDisconnectedHelp)
+    .attr('title', connected ? null : midiDisconnectedHelp)
 }

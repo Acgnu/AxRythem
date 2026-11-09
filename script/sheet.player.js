@@ -6,6 +6,17 @@ var pianoBuffers = {}
 var pianoLoad = null
 var pianoReady = false
 
+function updateAudioButton(){
+  let label = audioEnabled ? '关闭音频' : '开启音频'
+  let title = audioEnabled && !pianoReady
+    ? '音频加载中: ' + Object.keys(pianoBuffers).length + '/88，点击关闭音频' : label
+  $('#button_audio').attr({'aria-pressed': String(audioEnabled), 'aria-label': label, title: title})
+}
+
+function remindAudio(){
+  if(!audioEnabled) $('#button_audio svg').addClass('audio_reminder')
+}
+
 function initPianoAudio(){
   if(audioContext) return
   audioContext = new AudioContext({latencyHint: 'interactive'})
@@ -30,7 +41,7 @@ function loadPianoSamples(){
       if(!response.ok) throw new Error('琴音加载失败: ' + key)
       pianoBuffers[key] = await audioContext.decodeAudioData(await response.arrayBuffer())
       if(audioEnabled){
-        $('#status_audio').text('音频加载中: ' + Object.keys(pianoBuffers).length + '/88')
+        updateAudioButton()
       }
     }
   }
@@ -49,7 +60,7 @@ function setAudioEnabled(enabled){
     try {
       initPianoAudio()
       Promise.all([audioContext.resume(), loadPianoSamples()]).then(function(){
-        if(audioEnabled) $('#status_audio').prop('hidden', true)
+        updateAudioButton()
       }).catch(function(){
         if(!audioEnabled) return
         setAudioEnabled(false)
@@ -65,10 +76,8 @@ function setAudioEnabled(enabled){
     activeVoices.forEach(function(voice){ voice.stop() })
     activeVoices.clear()
   }
-  let label = enabled ? '关闭音频' : '开启音频'
-  $('#button_audio').attr({'aria-pressed': String(enabled), 'aria-label': label, title: label})
-  $('#status_audio').text(enabled ? '音频加载中: ' + Object.keys(pianoBuffers).length + '/88' : '音频关闭')
-    .prop('hidden', enabled && pianoReady)
+  if(enabled) $('#button_audio svg').removeClass('audio_reminder')
+  updateAudioButton()
 }
 /**
  * 根据曲谱样本播放音频
@@ -76,6 +85,7 @@ function setAudioEnabled(enabled){
  */
 const KEY_STYLE_ON_PLAY_CLASS = 'key_highlight_fix_player'
 function playBySheet(sheet) {
+  remindAudio()
   let idx = 0
   let item = sheet.data[idx]
   sheet.isPlaying = true
@@ -85,7 +95,7 @@ function playBySheet(sheet) {
       let keyNum = item[dataIndex]
       if(keyNum == 0)
         continue
-      playByKey(keyNum)
+      playByKey(keyNum, false)
 
       let keyboardGroup = getKeyboardGroup(keyNum);
       //获取组DOM
@@ -109,8 +119,10 @@ function playBySheet(sheet) {
 /**
  * 根据键位号播放对应的音频(音调)
  * @param keyNum (1-88)
+ * @param remindWhenMuted 静音时是否提醒开启音频；五线谱与曲谱定时播放不提醒
  */
-function playByKey(keyNum){
+function playByKey(keyNum, remindWhenMuted = true){
+  if(remindWhenMuted) remindAudio()
   if(!audioEnabled || !pianoReady || !pianoBuffers[keyNum]) return
   let voice = audioContext.createBufferSource()
   voice.buffer = pianoBuffers[keyNum]
@@ -130,6 +142,9 @@ function playByKey(keyNum){
 }
 
 $(function () {
+  $('#button_audio svg').on('animationend', function(){
+    $(this).removeClass('audio_reminder')
+  })
   $('#button_audio').click(function(){
     setAudioEnabled(!audioEnabled)
   })

@@ -55,7 +55,7 @@ $(function () {
     }
     _me.parent().children().removeClass('footage_active')
     _me.addClass('footage_active')
-    let domList = keyFootages[e.target.getAttribute('footage-index')]
+    let domList = keyFootages[_me.attr('footage-index')]
     for(let i = 0; i < domList.length; i++){
       activeKeyList.push(domList[i])
       $(domList[i]).addClass('key_highlight_fix');
@@ -104,7 +104,7 @@ function onLineTriggerClick(keyDom) {
     if($(keyDom).hasClass('key_highlight_fix')) return
     $(keyDom).addClass('key_highlight_fix')
     activeKeyList.push(keyDom)
-    playByKey(getKeyNumByKeyDom(keyDom))
+    playByKey(getKeyNumByKeyDom(keyDom), false)
   }
 }
 
