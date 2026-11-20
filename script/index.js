@@ -206,6 +206,21 @@ $(function () {
         activeClass = ''
     }
 
+    diaoPanel.on('mouseenter', 'li', function(){
+        let info = keyDiao.diaoPkg[this.getAttribute('diao-name')]
+        let keys = $('.key_pad [note-name]')
+        keys.removeClass('key_diao_preview')
+        keys.each(function(index){
+            let note = this.getAttribute('note-name')
+            let target = index + info.offset
+            if(target >= 0 && target < keys.length && !note.includes('#') && info.blackKeys.includes(note[0].toUpperCase())){
+                keys.eq(target).addClass('key_diao_preview')
+            }
+        })
+    }).on('mouseleave', 'li', function(){
+        $('.key_diao_preview').removeClass('key_diao_preview')
+    })
+
     // 用文本音符代替图片光标
     let staffNoteCursor = $('<span class="staff_note_cursor" aria-hidden="true">♪</span>').appendTo('body')
     $('.line_triggler').on('mouseenter mousemove', function(e) {
