@@ -5,11 +5,13 @@ var activeVoices = new Set()
 var pianoBuffers = {}
 var pianoLoad = null
 var pianoReady = false
+// 每个采样覆盖附近 11 个琴键，最大变调距离为 5 个半音。
+const PIANO_SAMPLE_KEYS = [6, 17, 28, 39, 50, 61, 72, 83]
 
 function updateAudioButton(){
   let label = audioEnabled ? '关闭音频' : '开启音频'
-  let title = audioEnabled && !pianoReady
-    ? '音频加载中: ' + Object.keys(pianoBuffers).length + '/88，点击关闭音频' : label
+  let title = !pianoReady
+    ? '音频加载中: ' + Object.keys(pianoBuffers).length + '/' + PIANO_SAMPLE_KEYS.length + '，' + label : label
   $('#button_audio').attr({'aria-pressed': String(audioEnabled), 'aria-label': label, title: title})
 }
 
@@ -31,18 +33,16 @@ function initPianoAudio(){
 
 function loadPianoSamples(){
   if(pianoLoad) return pianoLoad
-  let nextKey = 1
+  let nextIndex = 0
   // 限制并发下载；重试时只加载尚未成功解码的琴音。
   async function loadNext(){
-    while(nextKey <= 88){
-      let key = nextKey++
+    while(nextIndex < PIANO_SAMPLE_KEYS.length){
+      let key = PIANO_SAMPLE_KEYS[nextIndex++]
       if(pianoBuffers[key]) continue
       let response = await fetch('audio/key/' + key + '.mp3', {cache: 'force-cache'})
       if(!response.ok) throw new Error('琴音加载失败: ' + key)
       pianoBuffers[key] = await audioContext.decodeAudioData(await response.arrayBuffer())
-      if(audioEnabled){
-        updateAudioButton()
-      }
+      updateAudioButton()
     }
   }
   pianoLoad = Promise.allSettled(Array.from({length: 6}, loadNext)).then(function(results){
@@ -123,9 +123,12 @@ function playBySheet(sheet) {
  */
 function playByKey(keyNum, remindWhenMuted = true){
   if(remindWhenMuted) remindAudio()
-  if(!audioEnabled || !pianoReady || !pianoBuffers[keyNum]) return
+  if(!audioEnabled || !pianoReady || !Number.isInteger(keyNum) || keyNum < 1 || keyNum > 88) return
+  let sampleKey = PIANO_SAMPLE_KEYS.reduce((nearest, key) =>
+    Math.abs(key - keyNum) < Math.abs(nearest - keyNum) ? key : nearest)
   let voice = audioContext.createBufferSource()
-  voice.buffer = pianoBuffers[keyNum]
+  voice.buffer = pianoBuffers[sampleKey]
+  voice.detune.value = (keyNum - sampleKey) * 100
   voice.connect(pianoOutput)
   // 限制连续快速弹奏的声部数量，结束后及时释放节点。
   if(activeVoices.size >= 48){
@@ -142,6 +145,14 @@ function playByKey(keyNum, remindWhenMuted = true){
 }
 
 $(function () {
+  // 只预加载和解码；恢复音频上下文及发声仍由音频开关控制。
+  Promise.resolve().then(function(){
+    initPianoAudio()
+    updateAudioButton()
+    return Promise.all([audioContext.suspend(), loadPianoSamples()])
+  }).then(updateAudioButton).catch(function(){
+    if(!audioEnabled) $('#button_audio').attr('title', '琴音预加载失败，点击开启音频重试')
+  })
   $('#button_audio svg').on('animationend', function(){
     $(this).removeClass('audio_reminder')
   })
